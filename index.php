@@ -760,7 +760,6 @@
     to assist organisations in assessing their digital sovereign readiness. The data shared with Sinar Project
     supports research in understanding the overall digital sovereignty readiness of Malaysian civil society.</p>
 
-    <br>
     <p><strong>Modifications copyright &copy; 2026 Sinar Project.</strong>
     Modified from the original source to<br><a href="https://github.com/Sinar/dsra/releases" target="_blank" rel="noopener">various relevant enhancements for Malaysian civil society context. See Sinar/dsra releases page</a>.</p>
 
