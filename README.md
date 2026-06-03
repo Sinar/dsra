@@ -18,7 +18,7 @@ Then open http://localhost:8080
 
 This tool helps organizations evaluate their digital sovereignty posture across 7 critical domains in just 10-15 minutes. Upon completion, you can download a PDF report for sharing with internal teams or stakeholders.
 
-The name "viewfinder" reflects the tool's purpose as a lens into your organization's sovereignty posture — giving IT and business leaders a clear, focused view across 7 critical domains. The repository name `viewfinder-upstream` follows Red Hat's open-source model: "upstream" is the pure, self-hosted codebase (this repo), while "downstream" is the branded version hosted on Red Hat's website. Running the upstream version means all assessment data stays in your browser — nothing is sent to Red Hat or third parties.
+The name "viewfinder" reflects the tool's purpose as a lens into your organization's sovereignty posture — giving civil society organisations, IT and business leaders a clear, focused view across 7 critical domains. The repository name `viewfinder-upstream` follows Red Hat's open-source model: "upstream" is the pure, self-hosted codebase (this repo), while "downstream" is the branded version hosted on Red Hat's website. Running the upstream version means all assessment data stays in your browser — nothing is sent to Red Hat or third parties.
 
 For more background:
 - [Digital Sovereignty Is Illusory Without Open Source and a Trusted Supply Chain](https://www.redhat.com/en/blog/digital-sovereignty-illusory-without-open-source-and-trusted-supply-chain)
