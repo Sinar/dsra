@@ -519,6 +519,59 @@
                 </div>
               </div>
 
+              <!-- Respondent Details Form -->
+              <div class="respondent-form" style="margin-top: 1rem; padding: 1rem; background: #1a1a1a; border: 1px solid #444; border-radius: 4px;">
+                <h4 style="color: #9ec7fc; font-size: 0.85rem; margin: 0 0 1rem 0; text-align: center; font-weight: 600;">
+                  <i class="fa-solid fa-user"></i> Respondent Details
+                </h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                  <div>
+                    <label for="respondent-position" style="color: #ccc; font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">Position of respondent *</label>
+                    <select id="respondent-position" required style="width: 100%; padding: 0.5rem; font-size: 0.85rem; background: #151515; border: 1px solid #444; border-radius: 4px; color: #ccc;">
+                      <option value="">Select position...</option>
+                      <option value="head">Head of Organisation</option>
+                      <option value="manager">Project/Programme Manager</option>
+                      <option value="staff">Project Staff</option>
+                      <option value="admin">Administrative</option>
+                      <option value="others">Others</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="respondent-org" style="color: #ccc; font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">Name of organisation *</label>
+                    <input type="text" id="respondent-org" required style="width: 100%; padding: 0.5rem; font-size: 0.85rem; background: #151515; border: 1px solid #444; border-radius: 4px; color: #ccc; box-sizing: border-box;">
+                  </div>
+                  <div>
+                    <label for="respondent-size" style="color: #ccc; font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">Size of organisation *</label>
+                    <select id="respondent-size" required style="width: 100%; padding: 0.5rem; font-size: 0.85rem; background: #151515; border: 1px solid #444; border-radius: 4px; color: #ccc;">
+                      <option value="">Select size...</option>
+                      <option value="less5">Less than 5</option>
+                      <option value="6-10">6–10</option>
+                      <option value="more10">More than 10</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="respondent-state" style="color: #ccc; font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">State *</label>
+                    <select id="respondent-state" required style="width: 100%; padding: 0.5rem; font-size: 0.85rem; background: #151515; border: 1px solid #444; border-radius: 4px; color: #ccc;">
+                      <option value="">Select state...</option>
+                      <option value="johor">Johor</option>
+                      <option value="kedah">Kedah</option>
+                      <option value="kelantan">Kelantan</option>
+                      <option value="melaka">Melaka</option>
+                      <option value="nsembilan">Negeri Sembilan</option>
+                      <option value="pahang">Pahang</option>
+                      <option value="perak">Perak</option>
+                      <option value="perlis">Perlis</option>
+                      <option value="penang">Pulau Pinang</option>
+                      <option value="sabah">Sabah</option>
+                      <option value="sarawak">Sarawak</option>
+                      <option value="selangor">Selangor</option>
+                      <option value="terengganu">Terengganu</option>
+                      <option value="wp">Wilayah Persekutuan</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
               <!-- Custom Weights Controls (shown only when Custom profile is selected) -->
               <div class="custom-weights-section" id="custom-weights-section">
                 <h4><i class="fa-solid fa-sliders"></i> Customize Domain Weights</h4>
@@ -729,12 +782,53 @@
           updateWeightsDisplay(this.value);
         });
 
+        // Validate respondent form fields
+        function validateRespondentForm() {
+          const position = document.getElementById('respondent-position').value;
+          const org = document.getElementById('respondent-org').value.trim();
+          const size = document.getElementById('respondent-size').value;
+          const state = document.getElementById('respondent-state').value;
+
+          const fields = [
+            { id: 'respondent-position', valid: position !== '' },
+            { id: 'respondent-org', valid: org !== '' },
+            { id: 'respondent-size', valid: size !== '' },
+            { id: 'respondent-state', valid: state !== '' }
+          ];
+
+          let allValid = true;
+          fields.forEach(f => {
+            const el = document.getElementById(f.id);
+            if (f.valid) {
+              el.style.borderColor = '#444';
+            } else {
+              el.style.borderColor = '#c9190b';
+              allValid = false;
+            }
+          });
+
+          return allValid;
+        }
+
         // Handle start assessment button
         document.getElementById('start-assessment-btn').addEventListener('click', function() {
+          if (!validateRespondentForm()) {
+            alert('Please fill in all required respondent details before starting the assessment.');
+            return;
+          }
+
           const selectedProfile = document.getElementById('profile-select').value;
+          const position = encodeURIComponent(document.getElementById('respondent-position').value);
+          const org = encodeURIComponent(document.getElementById('respondent-org').value.trim());
+          const size = encodeURIComponent(document.getElementById('respondent-size').value);
+          const state = encodeURIComponent(document.getElementById('respondent-state').value);
 
           // Build URL with profile
-          let url = 'ds-qualifier/?profile=' + encodeURIComponent(selectedProfile);
+          let url = 'ds-qualifier/?profile=' + encodeURIComponent(selectedProfile)
+                  + '&position=' + position
+                  + '&org=' + org
+                  + '&size=' + size
+                  + '&state=' + state;
 
           // If custom profile, add custom weights as URL parameters
           if (selectedProfile === 'custom') {

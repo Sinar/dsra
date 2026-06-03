@@ -76,6 +76,12 @@
             }
         }
     }
+
+    // Read respondent data from landing page form
+    $respondentPosition = $_GET['position'] ?? '';
+    $respondentOrg = $_GET['org'] ?? '';
+    $respondentSize = $_GET['size'] ?? '';
+    $respondentState = $_GET['state'] ?? '';
     ?>
 
     <div class="qualifier-header">
@@ -103,6 +109,12 @@
     <form action="results.php" method="POST" id="qualifier-form">
       <!-- Pass selected profile to results page -->
       <input type="hidden" name="profile" value="<?php echo htmlspecialchars($selectedProfile); ?>">
+
+      <!-- Pass respondent details to results page -->
+      <input type="hidden" name="respondent_position" value="<?php echo htmlspecialchars($respondentPosition); ?>">
+      <input type="hidden" name="respondent_org" value="<?php echo htmlspecialchars($respondentOrg); ?>">
+      <input type="hidden" name="respondent_size" value="<?php echo htmlspecialchars($respondentSize); ?>">
+      <input type="hidden" name="respondent_state" value="<?php echo htmlspecialchars($respondentState); ?>">
 
       <!-- Pass custom weights if using custom profile -->
       <?php if ($selectedProfile === 'custom'): ?>

@@ -150,7 +150,8 @@ if ($weightedScore <= 4.2) {
 
 // Calculate percentage based on weighted score
 $scorePercentage = round(($weightedScore / $maxScore) * 100);
-$assessmentDate = date('F j, Y \a\t g:i A');
+$timezone = new DateTimeZone('Asia/Kuala_Lumpur');
+$assessmentDate = (new DateTime('now', $timezone))->format('F j, Y \a\t g:i A');
 
 // Build HTML for PDF
 $html = '<!DOCTYPE html>

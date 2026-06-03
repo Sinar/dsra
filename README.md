@@ -26,6 +26,24 @@ docker compose up -d --build
 
 Then open http://localhost:8080
 
+#### Deploying the Email Submission Branch
+
+```bash
+git clone -b cso-formsubmission https://github.com/Sinar/dsra.git
+cd dsra
+cp .env.example .env
+# Edit .env with your Mailgun API key or SMTP credentials:
+# nano .env
+docker compose up -d --build
+```
+
+To update an existing deployment with the latest changes:
+```bash
+docker compose down
+git pull origin cso-formsubmission
+docker compose up -d --build
+```
+
 > For local development without Docker (composer, PHP built-in server), see the [Local Installation Runbook](RUNBOOK.md).
 
 ## Screenshots
@@ -98,6 +116,8 @@ Professional PDF report with scores, domain breakdown, maturity level assessment
    ```
 
    > **Note**: Image and container names currently use `viewfinder-upstream` for upstream compatibility. These will be updated in a future release after internal packages are migrated.
+
+   > **For the email submission feature**: Copy `.env.example` to `.env` and configure `MAILER_DSN` before building (see [Deploying the Email Submission Branch](#quick-start) for details).
 
 #### Alternative: Docker without Compose
 
