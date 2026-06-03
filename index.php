@@ -752,8 +752,7 @@
 
   <footer class="disclaimer-footer">
     <p><strong>Modifications copyright &copy; 2026 Sinar Project.</strong>
-    Modified from the original source to add civil society-oriented questions, docker-compose support, and rebranding for the Malaysian civil society context
-    (<a href="https://github.com/Sinar/dsra" target="_blank" rel="noopener">source</a>).
+    Modified from the original source to add <a href="https://github.com/Sinar/dsra/releases" target="_blank" rel="noopener">civil society-oriented questions, docker-compose support, and rebranding for the Malaysian civil society context</a>.
     Original by <a href="https://github.com/redhat-cop/viewfinder-upstream" target="_blank" rel="noopener">Red Hat</a> &mdash; Apache 2.0 License.</p>
 
     <p>Sinar Project is hosting a modified version of Red Hat's Digital Sovereignty Readiness Assessment Tool
