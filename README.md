@@ -12,6 +12,8 @@ For more background:
 - [Digital Sovereignty Is Illusory Without Open Source and a Trusted Supply Chain](https://www.redhat.com/en/blog/digital-sovereignty-illusory-without-open-source-and-trusted-supply-chain)
 - [Introducing the Red Hat Sovereignty Readiness Assessment Tool](https://www.redhat.com/en/blog/how-sovereign-your-strategy-introducing-red-hat-sovereignty-readiness-assessment-tool)
 
+For adding or updating custom assessment questions, see [Adding Custom Questions](#adding-custom-questions).
+
 ## Quick Start
 
 **Prerequisite:** Requires [Docker & Docker Compose](https://docs.docker.com/engine/install/ubuntu/).
@@ -381,53 +383,35 @@ Edit `ds-qualifier/profiles.php` to customize:
 
 ## Troubleshooting
 
-### Common Issues
-
-**Issue**: Permission denied errors
+**Issue**: Port 8080 already in use
 ```bash
-# Solution: Set correct ownership and permissions
-sudo chown -R apache:apache /var/www/html/dsra
-sudo chmod 755 /var/www/html/dsra
-sudo chmod 775 /var/www/html/dsra/logs
+sudo lsof -i :8080
+```
+Or change the host port in `docker-compose.yml` (e.g., `"8081:8080"`).
+
+**Issue**: Container name already exists
+```bash
+docker stop viewfinder-upstream
+docker rm viewfinder-upstream
+docker compose up -d
 ```
 
-**Issue**: Composer dependencies not found
+**Issue**: Container exits immediately
 ```bash
-# Solution: Run composer install
-cd /var/www/html/dsra
-composer install --no-dev --optimize-autoloader
+docker compose logs -f
+docker compose up -d --build
 ```
 
 **Issue**: PDF generation fails
 ```bash
-# Solution: Check dompdf is installed
-composer show dompdf/dompdf
-# If not found, reinstall dependencies
-composer install --no-dev --optimize-autoloader
+docker compose exec viewfinder composer show dompdf/dompdf
+docker compose up -d --build
 ```
 
-**Issue**: Sessions not persisting
+**Issue**: Viewing logs
 ```bash
-# Solution: Check session directory permissions
-sudo chmod 1733 /var/lib/php/session  # For RHEL/CentOS
-sudo chmod 1733 /var/lib/php/sessions # For Debian/Ubuntu
-```
-
-### Logging
-
-View application logs for troubleshooting:
-
-```bash
-# View recent logs
-tail -f /var/www/html/dsra/logs/app.log
-
-# Search for errors
-grep ERROR /var/www/html/dsra/logs/app.log
-
-# View web server logs
-tail -f /var/log/httpd/error_log    # Apache (RHEL/CentOS)
-tail -f /var/log/apache2/error.log  # Apache (Debian/Ubuntu)
-tail -f /var/log/nginx/error.log    # Nginx
+docker compose logs -f
+docker compose logs viewfinder
 ```
 
 ## Development

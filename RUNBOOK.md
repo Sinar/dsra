@@ -49,3 +49,45 @@ Instructions for deploying the Digital Sovereignty Readiness Assessment without 
    ```
    http://your-server/dsra
    ```
+
+## Troubleshooting
+
+**Issue**: Permission denied errors
+```bash
+sudo chown -R apache:apache /var/www/html/dsra
+sudo chmod 755 /var/www/html/dsra
+sudo chmod 775 /var/www/html/dsra/logs
+```
+
+**Issue**: Composer dependencies not found
+```bash
+cd /var/www/html/dsra
+composer install --no-dev --optimize-autoloader
+```
+
+**Issue**: Sessions not persisting
+```bash
+sudo chmod 1733 /var/lib/php/session  # For RHEL/CentOS
+sudo chmod 1733 /var/lib/php/sessions # For Debian/Ubuntu
+```
+
+**Issue**: PDF generation fails
+```bash
+composer show dompdf/dompdf
+composer install --no-dev --optimize-autoloader
+```
+
+### Logging
+
+```bash
+# View recent logs
+tail -f /var/www/html/dsra/logs/app.log
+
+# Search for errors
+grep ERROR /var/www/html/dsra/logs/app.log
+
+# View web server logs
+tail -f /var/log/httpd/error_log    # Apache (RHEL/CentOS)
+tail -f /var/log/apache2/error.log  # Apache (Debian/Ubuntu)
+tail -f /var/log/nginx/error.log    # Nginx
+```
