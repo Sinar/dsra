@@ -14,6 +14,8 @@ For more background:
 
 ## Quick Start
 
+**Prerequisite:** Requires [Docker & Docker Compose](https://docs.docker.com/engine/install/ubuntu/).
+
 ```bash
 git clone https://github.com/Sinar/dsra.git
 cd dsra
