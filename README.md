@@ -33,7 +33,7 @@ Then open http://localhost:8080
 ### Landing Page
 The landing page features the Digital Sovereignty Readiness Assessment.
 
-![Landing Page - Balanced (Civil Society) Profile](images/screenshots/landing-page-balanced.png)
+![Landing Page - Balanced Profile](images/screenshots/landing-page-balanced.png)
 
 ### Assessment Page
 The assessment questionnaire presents 21 questions across 7 domains with Yes/No/"Don't Know" response options. Progress is auto-saved to browser storage.
@@ -67,7 +67,7 @@ Professional PDF report with scores, domain breakdown, maturity level assessment
   - Executive Oversight
   - Managed Services
 - **21 Key Questions**: 2-3 targeted questions per domain
-- **9 Industry Profiles**: Balanced (Civil Society), Financial Services, Healthcare, Government, Technology/SaaS, Manufacturing, Telecom, Energy, and Custom with domain-specific weighting
+- **9 Industry Profiles**: Balanced, Financial Services, Healthcare, Government, Technology/SaaS, Manufacturing, Telecom, Energy, and Custom with domain-specific weighting
 - **Custom Profile Builder**: Adjustable domain weight sliders for tailored assessments
 - **Multiple Response Options**: Yes/No/"Don't Know" format
 - **Instant Scoring**: Real-time maturity level calculation

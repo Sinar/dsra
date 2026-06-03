@@ -556,7 +556,7 @@
             <div class="landing-card-right">
               <div class="weights-display">
                 <h3>
-                  <i class="fa-solid fa-chart-bar"></i> Domain Weighting - <span id="profile-name-display">Balanced (Civil Society)</span>
+                  <i class="fa-solid fa-chart-bar"></i> Domain Weighting - <span id="profile-name-display">Balanced</span>
                 </h3>
                 <div id="weights-container">
                   <?php foreach ($domainNames as $domain): ?>
