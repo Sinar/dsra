@@ -9,3 +9,5 @@ services:
     restart: unless-stopped
     environment:
       - MAILER_DSN=${MAILER_DSN}
+      - MAILER_TO=${MAILER_TO}
+      - MAILER_FROM=${MAILER_FROM}

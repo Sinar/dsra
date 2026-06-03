@@ -290,10 +290,13 @@ try {
     $transport = Transport::fromDsn($mailerDsn);
     $mailer = new Mailer($transport);
 
+    $mailerFrom = $_SERVER['MAILER_FROM'] ?? getenv('MAILER_FROM') ?: 'noreply@sinarproject.org';
+    $mailerTo = $_SERVER['MAILER_TO'] ?? getenv('MAILER_TO') ?: 'team@sinarproject.org';
+
     $orgName = htmlspecialchars($respondentData['org']);
     $email = (new Email())
-        ->from('noreply@sinarproject.org')
-        ->to('team@sinarproject.org')
+        ->from($mailerFrom)
+        ->to($mailerTo)
         ->subject("DSRA Assessment Results - {$orgName}")
         ->text($emailText)
         ->attach($pdfContent, 'DS-Readiness-Assessment.pdf', 'application/pdf');

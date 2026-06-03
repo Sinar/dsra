@@ -32,7 +32,8 @@ Then open http://localhost:8080
 git clone -b cso-formsubmission https://github.com/Sinar/dsra.git
 cd dsra
 cp .env.example .env
-# Edit .env with your Mailgun API key or SMTP credentials:
+# Edit .env with your Mailgun API key (or SMTP credentials)
+# and set MAILER_TO / MAILER_FROM addresses:
 # nano .env
 docker compose up -d --build
 ```
