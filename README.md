@@ -2,6 +2,16 @@
 
 A streamlined Digital Sovereignty assessment tool focused on providing organizations with a quick and actionable readiness evaluation.
 
+## Overview
+
+This tool helps organizations evaluate their digital sovereignty posture across 7 critical domains in just 10-15 minutes. Upon completion, you can download a PDF report for sharing with internal teams or stakeholders.
+
+The name "viewfinder" reflects the tool's purpose as a lens into your organization's sovereignty posture — giving civil society organisations, IT and business leaders a clear, focused view across 7 critical domains. The repository name `viewfinder-upstream` follows Red Hat's open-source model: "upstream" is the pure, self-hosted codebase (this repo), while "downstream" is the branded version hosted on Red Hat's website. Running the upstream version means all assessment data stays in your browser — nothing is sent to Red Hat or third parties.
+
+For more background:
+- [Digital Sovereignty Is Illusory Without Open Source and a Trusted Supply Chain](https://www.redhat.com/en/blog/digital-sovereignty-illusory-without-open-source-and-trusted-supply-chain)
+- [Introducing the Red Hat Sovereignty Readiness Assessment Tool](https://www.redhat.com/en/blog/how-sovereign-your-strategy-introducing-red-hat-sovereignty-readiness-assessment-tool)
+
 ## Quick Start
 
 ```bash
@@ -13,16 +23,6 @@ docker compose up -d --build
 Then open http://localhost:8080
 
 > For local development without Docker (composer, PHP built-in server), see [Local Installation](#local-installation).
-
-## Overview
-
-This tool helps organizations evaluate their digital sovereignty posture across 7 critical domains in just 10-15 minutes. Upon completion, you can download a PDF report for sharing with internal teams or stakeholders.
-
-The name "viewfinder" reflects the tool's purpose as a lens into your organization's sovereignty posture — giving civil society organisations, IT and business leaders a clear, focused view across 7 critical domains. The repository name `viewfinder-upstream` follows Red Hat's open-source model: "upstream" is the pure, self-hosted codebase (this repo), while "downstream" is the branded version hosted on Red Hat's website. Running the upstream version means all assessment data stays in your browser — nothing is sent to Red Hat or third parties.
-
-For more background:
-- [Digital Sovereignty Is Illusory Without Open Source and a Trusted Supply Chain](https://www.redhat.com/en/blog/digital-sovereignty-illusory-without-open-source-and-trusted-supply-chain)
-- [Introducing the Red Hat Sovereignty Readiness Assessment Tool](https://www.redhat.com/en/blog/how-sovereign-your-strategy-introducing-red-hat-sovereignty-readiness-assessment-tool)
 
 ## Screenshots
 
