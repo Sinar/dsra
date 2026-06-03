@@ -763,6 +763,7 @@
     to assist organisations in assessing their digital sovereign readiness. The data shared with Sinar Project
     supports research in understanding the overall digital sovereignty readiness of Malaysian civil society.</p>
 
+    <br>
     <p><strong>Privacy:</strong> Personal Identifying Information collected in the survey will not be shared publicly.</p>
 
     <p><strong>Disclaimer:</strong> This survey is for informational purposes only to aid organizations review their general
