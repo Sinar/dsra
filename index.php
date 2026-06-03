@@ -751,7 +751,21 @@
   </div>
 
   <footer class="disclaimer-footer">
-    <p><strong>Disclaimer:</strong> This Digital Sovereignty Readiness Assessment Tool is provided by Red Hat for informational purposes only to help organizations review their general sovereign posture. It cannot be used to validate an organization’s compliance with any specific sovereignty requirements. It is not endorsed by any regulatory authority, and its findings or recommendations do not constitute legal advice. Red Hat bears no legal responsibility or liability for the results or its use. No identity data will be collected or saved.</p>
+    <p><strong>Modifications copyright &copy; 2026 Sinar Project.</strong>
+    Modified from the original source to add civil society-oriented questions, docker-compose support, and rebranding for the Malaysian civil society context
+    (<a href="https://github.com/Sinar/dsra" target="_blank" rel="noopener">source</a>).
+    Original by <a href="https://github.com/redhat-cop/viewfinder-upstream" target="_blank" rel="noopener">Red Hat</a> &mdash; Apache 2.0 License.</p>
+
+    <p>Sinar Project is hosting a modified version of Red Hat's Digital Sovereignty Readiness Assessment Tool
+    (<a href="https://github.com/Sinar/dsra" target="_blank" rel="noopener">source repo</a>)
+    to assist organisations in assessing their digital sovereign readiness. The data shared with Sinar Project
+    supports research in understanding the overall digital sovereignty readiness of Malaysian civil society.
+    Personal Identifying Information collected in the survey will not be shared publicly. This survey is for
+    informational purposes only to aid organizations review their general sovereign posture. This is an
+    analytical assessment tool and does not replace compliance certifications, legal and regulatory advice.
+    It should not be utilised for validation of an organization's compliance with any specific digital
+    sovereignty requirements. It is not endorsed by any regulatory authority, and its findings or recommendations
+    are not legally binding nor does it constitute legal advice.</p>
   </footer>
 </body>
 </html>
