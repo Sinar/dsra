@@ -2,6 +2,17 @@
 
 A streamlined Digital Sovereignty assessment tool focused on providing organizations with a quick and actionable readiness evaluation.
 
+## Quick Start
+
+```bash
+git clone https://github.com/Sinar/dsra.git
+cd dsra
+composer install
+php -S localhost:8080
+```
+
+Then open http://localhost:8080
+
 ## Overview
 
 This tool helps organizations evaluate their digital sovereignty posture across 7 critical domains in just 10-15 minutes.
@@ -11,7 +22,7 @@ This tool helps organizations evaluate their digital sovereignty posture across 
 ### Landing Page
 The landing page features the Digital Sovereignty Readiness Assessment.
 
-![Landing Page - Balanced Profile](images/screenshots/landing-page-balanced.png)
+![Landing Page - Balanced (Civil Society) Profile](images/screenshots/landing-page-balanced.png)
 
 ### Assessment Page
 The assessment questionnaire presents 21 questions across 7 domains with Yes/No/"Don't Know" response options. Progress is auto-saved to browser storage.
@@ -45,6 +56,8 @@ Professional PDF report with scores, domain breakdown, maturity level assessment
   - Executive Oversight
   - Managed Services
 - **21 Key Questions**: 2-3 targeted questions per domain
+- **9 Industry Profiles**: Balanced (Civil Society), Financial Services, Healthcare, Government, Technology/SaaS, Manufacturing, Telecom, Energy, and Custom with domain-specific weighting
+- **Custom Profile Builder**: Adjustable domain weight sliders for tailored assessments
 - **Multiple Response Options**: Yes/No/"Don't Know" format
 - **Instant Scoring**: Real-time maturity level calculation
 - **Maturity Levels**: Foundation, Developing, Strategic, Advanced
@@ -53,30 +66,56 @@ Professional PDF report with scores, domain breakdown, maturity level assessment
 - **PDF Export**: Professional downloadable reports
 - **Progress Auto-Save**: Browser-based session persistence
 - **Keyboard Navigation**: Arrow keys for quick navigation, Ctrl+S to save
+- **Privacy-First**: No data collected or stored server-side; all progress persisted in browser localStorage
 
 ## Installation
 
-### Podman Installation (easiest option)
+### Docker Installation (easiest option)
 
 1. **Clone the repository**:
    ```bash
-   $ git clone https://github.com/redhat-cop/viewfinder-upstream.git
-   $ cd viewfinder-upstream
-   ```
-2. **Build the container**:
-   ```bash
-   podman build -t viewfinder-upstream:latest .
+   git clone https://github.com/Sinar/dsra.git
+   cd dsra
    ```
 
-3. **Run the container**:
+2. **Build and run with Docker Compose**:
    ```bash
-   podman run -p 8080:8080 --name viewfinder-upstream viewfinder-upstream:latest
+   docker compose up -d --build
    ```
 
-4. **Access the application**:
+3. **Access the application**:
    ```
    http://localhost:8080
    ```
+
+   > **Note**: Image and container names currently use `viewfinder-upstream` for upstream compatibility. These will be updated in a future release after internal packages are migrated.
+
+#### Alternative: Docker without Compose
+
+```bash
+docker build -t viewfinder-upstream:latest .
+docker run -d -p 8080:8080 --name viewfinder-upstream viewfinder-upstream:latest
+```
+
+#### Multi-Architecture Builds
+
+```bash
+# Example: Building for both amd64 and arm64
+docker buildx build -t viewfinder-upstream:latest . --platform linux/amd64,linux/arm64
+```
+
+#### Managing the Container
+
+```bash
+# Stop the container
+docker stop viewfinder-upstream
+
+# Remove the container
+docker rm viewfinder-upstream
+
+# View logs
+docker compose logs -f
+```
 
 ### Prerequisites
 - PHP 8.1 or higher
@@ -85,14 +124,10 @@ Professional PDF report with scores, domain breakdown, maturity level assessment
 
 ### Local Installation
 
-1. **Clone or extract the application**:
+1. **Clone the repository**:
    ```bash
-   cd /var/www/html/viewfinder-upstream
-   $ cd <your working directory>
-   $ git clone https://github.com/redhat-cop/viewfinder-upstream.git
-   $ # Copy files from your working directory to your apache directory
-   $ cp -r viewfinder-upstream /var/www/html/
-   $ cd /var/www/html/viewfinder-upstream
+   git clone https://github.com/Sinar/dsra.git
+   cd dsra
    ```
 
 2. **Install dependencies**:
@@ -109,14 +144,14 @@ Professional PDF report with scores, domain breakdown, maturity level assessment
 3. **Set file permissions**:
    ```bash
    # Set ownership (adjust user/group for your system)
-   sudo chown -R apache:apache /var/www/html/viewfinder-upstream
+   sudo chown -R apache:apache /var/www/html/dsra
 
    # Set directory permissions
-   sudo chmod 755 /var/www/html/viewfinder-upstream
-   sudo chmod 775 /var/www/html/viewfinder-upstream/logs
+   sudo chmod 755 /var/www/html/dsra
+   sudo chmod 775 /var/www/html/dsra/logs
 
    # Set file permissions
-   find /var/www/html/viewfinder-upstream -type f -exec chmod 644 {} \;
+   find /var/www/html/dsra -type f -exec chmod 644 {} \;
    ```
 
 4. **Configure web server**:
@@ -124,37 +159,20 @@ Professional PDF report with scores, domain breakdown, maturity level assessment
 
 5. **Access the application**:
    ```
-   http://your-server/viewfinder-upstream
-   ```
-
-
-1. **Build the container**:
-   ```bash
-   cd /var/www/html/viewfinder-upstream
-   podman build -t viewfinder-upstream:latest .
-   ```
-
-2. **Run the container**:
-   ```bash
-   podman run -d -p 8080:8080 --name viewfinder-upstream viewfinder-upstream:latest
-   ```
-
-3. **Access the application**:
-   ```
-   http://localhost:8080
+   http://your-server/dsra
    ```
 
 ## Web Server Configuration
 
 ### Apache Configuration
 
-**VirtualHost Example** (`/etc/httpd/conf.d/viewfinder-upstream.conf`):
+**VirtualHost Example** (`/etc/httpd/conf.d/dsra.conf`):
 ```apache
 <VirtualHost *:80>
-    ServerName viewfinder-upstream.example.com
-    DocumentRoot /var/www/html/viewfinder-upstream
+    ServerName dsra.example.com
+    DocumentRoot /var/www/html/dsra
 
-    <Directory /var/www/html/viewfinder-upstream>
+    <Directory /var/www/html/dsra>
         Options -Indexes +FollowSymLinks
         AllowOverride All
         Require all granted
@@ -166,19 +184,19 @@ Professional PDF report with scores, domain breakdown, maturity level assessment
     </Directory>
 
     # Logging
-    ErrorLog /var/log/httpd/viewfinder-upstream-error.log
-    CustomLog /var/log/httpd/viewfinder-upstream-access.log combined
+    ErrorLog /var/log/httpd/dsra-error.log
+    CustomLog /var/log/httpd/dsra-access.log combined
 </VirtualHost>
 ```
 
 ### Nginx Configuration
 
-**Server Block Example** (`/etc/nginx/conf.d/viewfinder-upstream.conf`):
+**Server Block Example** (`/etc/nginx/conf.d/dsra.conf`):
 ```nginx
 server {
     listen 80;
-    server_name viewfinder-upstream.example.com;
-    root /var/www/html/viewfinder-upstream;
+    server_name dsra.example.com;
+    root /var/www/html/dsra;
     index index.php;
 
     # Security headers
@@ -203,27 +221,26 @@ server {
     }
 
     # Logging
-    access_log /var/log/nginx/viewfinder-upstream-access.log;
-    error_log /var/log/nginx/viewfinder-upstream-error.log;
+    access_log /var/log/nginx/dsra-access.log;
+    error_log /var/log/nginx/dsra-error.log;
 }
 ```
 
 ## File Structure
 
 ```
-viewfinder-upstream/
+dsra/
 ├── index.php                    # Landing page
 ├── composer.json                # PHP dependencies
-├── composer.lock                # Dependency lock file
+├── docker-compose.yml           # Docker Compose configuration
 ├── Dockerfile                   # Container build configuration
 ├── README.md                    # This file
-├── CHANGES.md                   # Change log
-├── IMPLEMENTATION_SUMMARY.txt   # Implementation details
 │
 ├── ds-qualifier/                # Digital Sovereignty Readiness Assessment
 │   ├── index.php               # Assessment questionnaire interface
 │   ├── results.php             # Results and recommendations page
 │   ├── config.php              # Questions configuration
+│   ├── profiles.php            # Industry weighting profiles
 │   ├── generate-pdf.php        # PDF report generator
 │   ├── css/
 │   │   └── ds-qualifier.css    # Assessment-specific styles
@@ -249,19 +266,30 @@ viewfinder-upstream/
 │   ├── patternfly.css          # Red Hat PatternFly design system
 │   └── patternfly-addons.css   # PatternFly extensions
 │
-├── js/                          # Shared JavaScript files
-│
 ├── images/                      # Images and logos
 │   └── screenshots/             # Documentation screenshots
 │       ├── landing-page-balanced.png
+│       ├── landing-page-financial.png
+│       ├── landing-page-custom.png
 │       ├── assessment-page.png
 │       ├── results-page1.png
 │       ├── results-page2.png
 │       ├── results-page3.png
-│       └── pdf-report-sample.png
+│       ├── pdf-report-sample.png
+│       └── cmmi-levels.png
 │
 ├── error-pages/                 # Error handling pages
-│   └── error-handler.php
+│   ├── error-handler.php
+│   └── templates/
+│       ├── system-error.php
+│       ├── validation-error.php
+│       ├── file-not-found.php
+│       └── json-error.php
+│
+├── .github/                     # GitHub configuration
+│   ├── workflows/
+│   │   └── build-image.yml     # CI/CD pipeline
+│   └── dependabot.yml          # Dependency updates
 │
 ├── logs/                        # Application logs (created at runtime)
 │
@@ -275,20 +303,23 @@ Navigate to the root URL to access the landing page featuring the Digital Sovere
 
 ### Taking an Assessment
 
-1. **Start Assessment**: Click "Start Assessment" button to begin
-2. **Answer Questions**: Progress through 7 domains
+1. **Select Profile**: Choose from 9 industry profiles or create a custom weighting
+2. **Start Assessment**: Click "Start Assessment" button to begin
+3. **Answer Questions**: Progress through 7 domains
    - Use Next/Previous buttons to navigate
    - Answer Yes/No or select "Don't Know" for uncertain items
    - Questions are validated before proceeding
    - Progress auto-saves to browser storage
-3. **Submit**: Click "Complete Assessment" on the final section
-4. **View Results**: Review your maturity level and recommendations
-5. **Download Report**: Generate PDF report for stakeholders
-6. **Take New Assessment**: Start fresh assessment anytime
+4. **Submit**: Click "Complete Assessment" on the final section
+5. **View Results**: Review your maturity level and recommendations
+6. **Download Report**: Generate PDF report for stakeholders
+7. **Take New Assessment**: Start fresh assessment anytime
 
 ### Understanding Results
 
 #### Maturity Levels
+
+The assessment uses a 4-level maturity model based on the [Capability Maturity Model Integration (CMMI)](https://en.wikipedia.org/wiki/Capability_Maturity_Model_Integration) framework.
 
 Based on your score (0-21 points):
 
@@ -338,6 +369,11 @@ Edit `ds-qualifier/config.php` to customize:
 - Domain definitions
 - Tooltips and help text
 
+### Industry Profiles
+Edit `ds-qualifier/profiles.php` to customize:
+- Domain weighting multipliers
+- Profile names and descriptions
+
 ## Dependencies
 
 ### PHP Requirements
@@ -367,8 +403,8 @@ Edit `ds-qualifier/config.php` to customize:
 
 ## Comparison with Full Viewfinder
 
-| Feature | Full Viewfinder | Viewfinder Lite |
-|---------|----------------|-----------------|
+| Feature | Full Viewfinder | DSRA |
+|---------|----------------|------|
 | Profile Management | ✓ | ✗ |
 | Full Maturity Assessments | ✓ | ✗ |
 | Readiness Assessment | ✓ | ✓ |
@@ -385,15 +421,15 @@ Edit `ds-qualifier/config.php` to customize:
 **Issue**: Permission denied errors
 ```bash
 # Solution: Set correct ownership and permissions
-sudo chown -R apache:apache /var/www/html/viewfinder-upstream
-sudo chmod 755 /var/www/html/viewfinder-upstream
-sudo chmod 775 /var/www/html/viewfinder-upstream/logs
+sudo chown -R apache:apache /var/www/html/dsra
+sudo chmod 755 /var/www/html/dsra
+sudo chmod 775 /var/www/html/dsra/logs
 ```
 
 **Issue**: Composer dependencies not found
 ```bash
 # Solution: Run composer install
-cd /var/www/html/viewfinder-upstream
+cd /var/www/html/dsra
 composer install --no-dev --optimize-autoloader
 ```
 
@@ -418,10 +454,10 @@ View application logs for troubleshooting:
 
 ```bash
 # View recent logs
-tail -f /var/www/html/viewfinder-upstream/logs/app.log
+tail -f /var/www/html/dsra/logs/app.log
 
 # Search for errors
-grep ERROR /var/www/html/viewfinder-upstream/logs/app.log
+grep ERROR /var/www/html/dsra/logs/app.log
 
 # View web server logs
 tail -f /var/log/httpd/error_log    # Apache (RHEL/CentOS)
@@ -459,20 +495,16 @@ Edit `ds-qualifier/results.php` to adjust:
 - Maturity level names
 - Recommendations per level
 
-## License
-
-Apache-2.0 License - Red Hat
-
 ## Support
 
 This is a community-supported open source project. For issues, questions, or feature requests:
 
-- **GitHub Issues**: https://github.com/redhat-cop/viewfinder-upstream/issues
-- **GitHub Discussions**: https://github.com/redhat-cop/viewfinder-upstream/discussions
-- **Red Hat Community of Practice**: https://github.com/redhat-cop
+- **GitHub Issues**: https://github.com/Sinar/dsra/issues
+- **GitHub Discussions**: https://github.com/Sinar/dsra/discussions
 
-For enterprise support and the enhanced CMMI version, contact your Red Hat representative.
-For issues, questions, or feature requests, please refer to the main Viewfinder project documentation or contact your Red Hat representative.
+## License
+
+Apache-2.0 License
 
 ## Disclaimer
 
@@ -480,6 +512,6 @@ This application is provided for informational purposes only. The information is
 
 ---
 
-**Viewfinder Lite** - Streamlined Digital Sovereignty Readiness Assessment
+**Digital Sovereignty Readiness Assessment (DSRA)** - Streamlined Digital Sovereignty Readiness Assessment
 
 Version: 1.0.0

@@ -1,0 +1,9 @@
+services:
+  viewfinder:
+    build:
+      context: .
+    image: viewfinder-upstream:latest
+    container_name: viewfinder-upstream
+    ports:
+      - "8080:8080"
+    restart: unless-stopped

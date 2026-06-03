@@ -8,7 +8,7 @@
 
 return [
     'balanced' => [
-        'name' => 'Balanced',
+        'name' => 'Balanced (Civil Society)',
         'description' => 'Equal weighting across all domains - suitable for general assessments and organizations without specific regulatory constraints.',
         'icon' => 'fa-balance-scale',
         'weights' => [
