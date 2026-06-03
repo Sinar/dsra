@@ -755,7 +755,7 @@
     <a href="https://github.com/redhat-cop/viewfinder-upstream" target="_blank" rel="noopener">Source code for the Red Hat Sovereignty Readiness Assessment</a>
     &mdash; Apache 2.0 License.
     <br><strong>Modifications copyright &copy; 2026 Sinar Project.</strong>
-    Modified from the original source to add <a href="https://github.com/Sinar/dsra/releases" target="_blank" rel="noopener">civil society-oriented questions, docker-compose support, and rebranding for the Malaysian civil society context</a>.</p>
+    Modified from the original source to<br><a href="https://github.com/Sinar/dsra/releases" target="_blank" rel="noopener">various relevant enhancements for Malaysian civil society context. See Sinar/dsra releases page</a>.</p>
 
     <br>
     <p>Sinar Project is hosting a modified version of Red Hat's Digital Sovereignty Readiness Assessment Tool
