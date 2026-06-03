@@ -761,7 +761,7 @@
     supports research in understanding the overall digital sovereignty readiness of Malaysian civil society.</p>
 
     <p><strong>Modifications copyright &copy; 2026 Sinar Project.</strong>
-    Modified from the original source to<br><a href="https://github.com/Sinar/dsra/releases" target="_blank" rel="noopener">various relevant enhancements for Malaysian civil society context. See Sinar/dsra releases page</a>.</p>
+    Modified from the original source to include<br><a href="https://github.com/Sinar/dsra/releases" target="_blank" rel="noopener">various relevant enhancements for Malaysian civil society context. See Sinar/dsra releases page</a>.</p>
 
     <br>
     <p><strong>Privacy:</strong> Personal Identifying Information collected in the survey will not be shared publicly.</p>
