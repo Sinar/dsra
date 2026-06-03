@@ -13,21 +13,27 @@ return [
         'questions' => [
             [
                 'id' => 'ds1',
-                'text' => 'Does your organization currently comply with all data residency requirements or regulations relevant to your country/region/vertical?',
+                'text' => 'Does your organization follow all laws, regulations, and industry requirements related to where data must be stored or processed?',
                 'weight' => 1,
-                'tooltip' => 'Examples: GDPR (EU), PIPEDA (Canada), LGPD (Brazil), industry regulations requiring data to stay within specific jurisdictions.'
+                'tooltip' => 'Civil society organisations often serve across borders. Understanding where beneficiary data is stored helps protect privacy and comply with local laws.',
+                'link' => [
+                    'url' => 'https://www.dataguidance.com/jurisdictions/malaysia'
+                ]
             ],
             [
                 'id' => 'ds2',
-                'text' => 'Do you control and manage your encryption keys exclusively (not shared with cloud providers)?',
+                'text' => 'Do you hold and manage your own \'encryption keys\' to ensure that your service provider (like Google or Microsoft) cannot unlock or see your data?',
                 'weight' => 1,
-                'tooltip' => 'BYOK (Bring Your Own Key) or HYOK (Hold Your Own Key) ensures only you can decrypt data, not the cloud provider.'
+                'tooltip' => 'For sensitive data about beneficiaries, whistleblowers, or staff in high-risk regions, holding your own encryption keys prevents cloud providers from accessing that data.',
+                'link' => [
+                    'url' => 'https://ssd.eff.org/module/deep-dive-end-end-encryption-how-do-public-key-encryption-systems-work'
+                ]
             ],
             [
                 'id' => 'ds3',
-                'text' => 'Can you prevent sensitive data from crossing specific geographic borders?',
+                'text' => 'Can you stop sensitive data from being stored or transferred outside specific countries or regions?',
                 'weight' => 1,
-                'tooltip' => 'True cloud portability means workloads can move between providers (e.g. AWS, Azure, local providers, on-prem) without major rewrites.'
+                'tooltip' => 'If your organisation works across multiple countries, sensitive data stored in foreign jurisdictions could put communities at risk if local laws change.'
             ]
         ]
     ],
@@ -38,21 +44,21 @@ return [
         'questions' => [
             [
                 'id' => 'ts1',
-                'text' => 'Can you mitigate vendor lock-in risks with your current technology stack?',
+                'text' => 'If a tool you rely on suddenly disappeared, could you switch to something else without major disruption?',
                 'weight' => 1,
-                'tooltip' => 'Vendor lock-in occurs when proprietary technologies make it difficult or expensive to switch providers. Open source and standards-based platforms reduce this risk.'
+                'tooltip' => 'Non-profits often rely on donated or discounted software. If terms change, switching without disruption protects continuity of your mission-critical tools.'
             ],
             [
                 'id' => 'ts2',
-                'text' => 'Do you prioritize open standards over proprietary APIs in your platforms?',
+                'text' => 'Do you prefer tools that use open standards and APIs so your systems can connect, share data and work together freely rather than being locked into one company\'s ecosystem?',
                 'weight' => 1,
                 'tooltip' => 'Open standards (Kubernetes, OCI containers, POSIX) ensure portability and interoperability. Proprietary APIs create dependencies on specific vendors.'
             ],
             [
                 'id' => 'ts3',
-                'text' => 'Can you migrate critical applications to different cloud platforms if needed?',
+                'text' => 'Could you move your important apps to a different cloud platform without losing data or disrupting your work?',
                 'weight' => 1,
-                'tooltip' => 'True cloud portability means workloads can move between providers (AWS, Azure, on-prem) without major rewrites.'
+                'tooltip' => 'If your current platform\'s free tier or donated licenses are discontinued, can you move your data to another provider without losing work?'
             ]
         ]
     ],
@@ -63,21 +69,21 @@ return [
         'questions' => [
             [
                 'id' => 'os1',
-                'text' => 'Can you continue operating critical systems if external cloud services become unavailable?',
+                'text' => 'Can you keep working if the cloud (Google Drive/OneDrive) tools you rely on are suddenly blocked or unavailable?',
                 'weight' => 1,
-                'tooltip' => 'Operational resilience means critical systems can run independently if cloud providers have outages or service disruptions.'
+                'tooltip' => 'Civil society organisations in politically sensitive environments face real risks of cloud services being blocked or restricted. Can your team keep working?'
             ],
             [
                 'id' => 'os2',
-                'text' => 'Do you have in-house technical expertise to manage sovereign infrastructure?',
+                'text' => 'Do you have in-house technical expertise to manage \'sovereign infrastructure\' (systems your organisation fully owns and controls)?',
                 'weight' => 1,
                 'tooltip' => 'Managing sovereign systems requires specialized skills in security, compliance, and infrastructure management.'
             ],
             [
                 'id' => 'os3',
-                'text' => 'Do you have disaster recovery plans that account for geopolitical scenarios?',
+                'text' => 'Do your disaster recovery plans cover geopolitical risks such as funding freezes, regulatory restrictions, or forced shutdowns?',
                 'weight' => 1,
-                'tooltip' => 'Geopolitical risks include sanctions, trade restrictions, and data access laws (CLOUD Act, etc.). DR plans should address scenarios where international providers may be restricted.'
+                'tooltip' => 'Civil society faces unique geopolitical risks — funding freezes, sanctions, regulatory changes. Your DR plans should account for these scenarios.'
             ]
         ]
     ],
@@ -94,13 +100,13 @@ return [
             ],
             [
                 'id' => 'as2',
-                'text' => 'Do you control where your security logs and audit trails are stored?',
+                'text' => 'Does your organisation control the records of who accesses your systems and when – or does an external provider hold those records?',
                 'weight' => 1,
-                'tooltip' => 'Security logs contain sensitive information and must meet retention and location requirements. Storing logs with the same vendor creates a single point of failure.'
+                'tooltip' => 'If your email or document provider holds your audit logs, you may not have full visibility into who accessed sensitive data during an incident.'
             ],
             [
                 'id' => 'as3',
-                'text' => 'Are you aware of your country’s applicable sovereignty related standards ?',
+                'text' => 'Are you aware of the digital \'sovereignty\' standards in your country – the laws and guidelines that give your organisation authority and control over its own data?',
                 'weight' => 1,
                 'tooltip' => 'Global regulations related to digital sovereignty are still evolving and vary widely but generally focus on a state\'s control over data and technology within its borders. These rules are often motivated by national security, economic interests, and the protection of citizen privacy, and they can significantly impact how companies operate internationally.'
             ]
@@ -119,7 +125,7 @@ return [
             ],
             [
                 'id' => 'oss2',
-                'text' => 'Can you fork and independently maintain critical open-source dependencies if needed?',
+                'text' => 'If your free \'open-source\' software is abandoned, could you manage and update a copy of it independently?',
                 'weight' => 1,
                 'tooltip' => 'True software sovereignty means the ability to take ownership if upstream projects change direction or become unavailable.'
             ],
@@ -138,15 +144,15 @@ return [
         'questions' => [
             [
                 'id' => 'eo1',
-                'text' => 'Do you have an executive sponsor or steering committee for digital sovereignty initiatives?',
+                'text' => 'Do you have an executive sponsor or steering committee (i.e. part of organization structure?) for digital sovereignty (control of your own technology and data) initiatives?',
                 'weight' => 1,
-                'tooltip' => 'Executive sponsorship ensures funding, priority, and cross-organizational alignment for digital sovereignty initiatives.'
+                'tooltip' => 'For civil society — does your board or leadership have someone advocating for digital rights and technology independence?'
             ],
             [
                 'id' => 'eo2',
-                'text' => 'Is digital sovereignty explicitly part of your corporate or IT strategy?',
+                'text' => 'Does your organisation\'s strategy include goals around data control or reducing dependence on big tech platforms?',
                 'weight' => 1,
-                'tooltip' => 'Strategic commitment to digital sovereignty drives technology choices, vendor selection, and architecture decisions.'
+                'tooltip' => 'Your organisation may already have goals around data protection or reducing dependency on big tech — those are sovereignty goals, even if you don\'t use that term.'
             ],
             [
                 'id' => 'eo3',

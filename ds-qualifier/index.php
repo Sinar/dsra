@@ -137,6 +137,13 @@
                         <i class="fa-solid fa-circle-info"></i>
                       </span>
                     <?php endif; ?>
+                    <?php if (!empty($question['link'])): ?>
+                      <a href="<?php echo htmlspecialchars($question['link']['url']); ?>"
+                         target="_blank" rel="noopener noreferrer"
+                         class="question-link" title="Learn more about this topic">
+                        <i class="fa-solid fa-up-right-from-square"></i>
+                      </a>
+                    <?php endif; ?>
                   </span>
                 </div>
                 <div class="button-group" data-domain="<?php echo $domainData['domain_key']; ?>">

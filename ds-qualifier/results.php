@@ -127,7 +127,8 @@
                             $unknownQuestions[] = [
                                 'domain' => $domainName,
                                 'question' => $question['text'],
-                                'tooltip' => $question['tooltip'] ?? ''
+                                'tooltip' => $question['tooltip'] ?? '',
+                                'link' => $question['link'] ?? null
                             ];
                             // Don't count toward score, but don't penalize either
                         } else {
@@ -373,6 +374,12 @@
                         <i class="fa-solid fa-lightbulb"></i>
                         <strong>Context:</strong> <?php echo htmlspecialchars($uq['tooltip']); ?>
                       </div>
+                    <?php endif; ?>
+                    <?php if (!empty($uq['link'])): ?>
+                      <a href="<?php echo htmlspecialchars($uq['link']['url']); ?>"
+                         target="_blank" rel="noopener noreferrer" class="question-link">
+                        <i class="fa-solid fa-up-right-from-square"></i> Learn more
+                      </a>
                     <?php endif; ?>
                   </div>
                 </li>

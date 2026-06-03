@@ -291,6 +291,19 @@
     visibility: visible;
 }
 
+/* Question context link */
+.question-link {
+    color: #06c;
+    margin-left: 0.5rem;
+    font-size: 0.85rem;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.question-link:hover {
+    color: #004080;
+    text-decoration: underline;
+}
+
 /* Radio Button Groups */
 .button-group {
     display: flex;

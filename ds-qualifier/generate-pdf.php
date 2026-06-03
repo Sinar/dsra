@@ -75,12 +75,13 @@ foreach ($assessmentData as $key => $value) {
             foreach ($domainData['questions'] as $question) {
                 if ($question['id'] === $key) {
                     // Handle "Don't Know" responses
-                    if ($value === 'unknown') {
-                        $unknownQuestions[] = [
-                            'domain' => $domainName,
-                            'question' => $question['text'],
-                            'tooltip' => $question['tooltip'] ?? ''
-                        ];
+                        if ($value === 'unknown') {
+                            $unknownQuestions[] = [
+                                'domain' => $domainName,
+                                'question' => $question['text'],
+                                'tooltip' => $question['tooltip'] ?? '',
+                                'link' => $question['link'] ?? null
+                            ];
                     } else {
                         $intValue = intval($value);
                         $totalScore += $intValue;
@@ -531,6 +532,9 @@ if (!empty($unknownQuestions)) {
                         <strong>' . htmlspecialchars($uq['question']) . '</strong>';
             if (!empty($uq['tooltip'])) {
                 $html .= '<p style="margin: 5px 0 0 0; font-size: 10pt; color: #666;">' . htmlspecialchars($uq['tooltip']) . '</p>';
+            }
+            if (!empty($uq['link'])) {
+                $html .= '<p style="margin: 3px 0 0 0; font-size: 9pt;"><a href="' . htmlspecialchars($uq['link']['url']) . '" style="color: #0066cc; text-decoration: none;">[Learn more about this topic]</a></p>';
             }
             $html .= '</div>';
         }
