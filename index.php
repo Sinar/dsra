@@ -519,6 +519,13 @@
                 </div>
               </div>
 
+              <p style="font-size: 0.8rem; color: #999; line-height: 1.5; margin-bottom: 1rem; padding: 0.75rem; background: #1a1a1a; border-left: 3px solid #0d60f8; border-radius: 4px;">
+                Sinar Project is hosting a modified version of Red Hat's Digital Sovereignty Readiness Assessment Tool
+                (<a href="https://github.com/Sinar/dsra" target="_blank" rel="noopener" style="color: #0d60f8;">source repo</a>)
+                to assist organisations in assessing their digital sovereign readiness. The data shared with Sinar Project
+                supports research in understanding the overall digital sovereignty readiness of Malaysian civil society.
+              </p>
+
               <!-- Respondent Details Form -->
               <div class="respondent-form" style="margin-top: 1rem; padding: 1rem; background: #1a1a1a; border: 1px solid #444; border-radius: 4px;">
                 <h4 style="color: #9ec7fc; font-size: 0.85rem; margin: 0 0 1rem 0; text-align: center; font-weight: 600;">
@@ -597,6 +604,17 @@
                   </div>
                 <?php endforeach; ?>
               </div>
+
+              <p style="font-size: 0.75rem; color: #777; margin: 0.5rem 0 0.25rem 0; line-height: 1.4;">
+                <strong>Privacy:</strong> Personal Identifying Information collected in the survey will not be shared publicly.
+              </p>
+              <p style="font-size: 0.75rem; color: #777; margin: 0 0 0.5rem 0; line-height: 1.4;">
+                <strong>Disclaimer:</strong> This survey is for informational purposes only to aid organizations review their general
+                sovereign posture. This is an analytical assessment tool and does not replace compliance certifications, legal and
+                regulatory advice. It should not be utilised for validation of an organization's compliance with any specific digital
+                sovereignty requirements. It is not endorsed by any regulatory authority, and its findings or recommendations are not
+                legally binding nor does it constitute legal advice.
+              </p>
 
               <div class="landing-card-buttons">
                 <button id="start-assessment-btn" class="landing-button landing-button-primary">
@@ -849,22 +867,8 @@
     <a href="https://github.com/redhat-cop/viewfinder-upstream" target="_blank" rel="noopener">Source code for the Red Hat Sovereignty Readiness Assessment</a>
     &mdash; Apache 2.0 License.</p>
 
-    <p>Sinar Project is hosting a modified version of Red Hat's Digital Sovereignty Readiness Assessment Tool
-    (<a href="https://github.com/Sinar/dsra" target="_blank" rel="noopener">source repo</a>)
-    to assist organisations in assessing their digital sovereign readiness. The data shared with Sinar Project
-    supports research in understanding the overall digital sovereignty readiness of Malaysian civil society.</p>
-
     <p><strong>Modifications copyright &copy; 2026 Sinar Project.</strong>
     Modified from the original source to include<br><a href="https://github.com/Sinar/dsra/releases" target="_blank" rel="noopener">various relevant enhancements for Malaysian civil society context. See Sinar/dsra releases page</a>.</p>
-
-    <br>
-    <p><strong>Privacy:</strong> Personal Identifying Information collected in the survey will not be shared publicly.</p>
-
-    <p><strong>Disclaimer:</strong> This survey is for informational purposes only to aid organizations review their general
-    sovereign posture. This is an analytical assessment tool and does not replace compliance certifications, legal and
-    regulatory advice. It should not be utilised for validation of an organization's compliance with any specific digital
-    sovereignty requirements. It is not endorsed by any regulatory authority, and its findings or recommendations are not
-    legally binding nor does it constitute legal advice.</p>
   </footer>
 </body>
 </html>
