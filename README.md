@@ -22,7 +22,7 @@ docker compose up -d --build
 
 Then open http://localhost:8080
 
-> For local development without Docker (composer, PHP built-in server), see [Local Installation](#local-installation).
+> For local development without Docker (composer, PHP built-in server), see the [Local Installation Runbook](RUNBOOK.md).
 
 ## Screenshots
 
@@ -75,9 +75,7 @@ Professional PDF report with scores, domain breakdown, maturity level assessment
 - **Keyboard Navigation**: Arrow keys for quick navigation, Ctrl+S to save
 - **Privacy-First**: No data collected or stored server-side; all progress persisted in browser localStorage
 
-## Installation
-
-### Docker Installation (easiest option)
+## Docker Installation (Recommended)
 
 1. **Clone the repository**:
    ```bash
@@ -124,50 +122,7 @@ docker rm viewfinder-upstream
 docker compose logs -f
 ```
 
-### Prerequisites
-- PHP 8.1 or higher
-- Apache or Nginx web server
-- Composer (for dependency management)
-
-### Local Installation
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/Sinar/dsra.git
-   cd dsra
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   composer install --no-dev --optimize-autoloader
-   ```
-
-   **Note**: If you encounter a "composer.lock does not contain valid JSON" error, the lock file may have been corrupted during file transfer. Fix it by running:
-   ```bash
-   rm composer.lock
-   composer install --no-dev --optimize-autoloader
-   ```
-
-3. **Set file permissions**:
-   ```bash
-   # Set ownership (adjust user/group for your system)
-   sudo chown -R apache:apache /var/www/html/dsra
-
-   # Set directory permissions
-   sudo chmod 755 /var/www/html/dsra
-   sudo chmod 775 /var/www/html/dsra/logs
-
-   # Set file permissions
-   find /var/www/html/dsra -type f -exec chmod 644 {} \;
-   ```
-
-4. **Configure web server**:
-   - See [Web Server Configuration](#web-server-configuration) below
-
-5. **Access the application**:
-   ```
-   http://your-server/dsra
-   ```
+> For local deployment without Docker using PHP, Apache/Nginx, and Composer directly, see the [Local Installation Runbook](RUNBOOK.md).
 
 ## Web Server Configuration
 
@@ -242,6 +197,7 @@ dsra/
 ├── docker-compose.yml           # Docker Compose configuration
 ├── Dockerfile                   # Container build configuration
 ├── README.md                    # This file
+├── RUNBOOK.md                   # Local installation runbook
 │
 ├── ds-qualifier/                # Digital Sovereignty Readiness Assessment
 │   ├── index.php               # Assessment questionnaire interface
