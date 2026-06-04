@@ -19,7 +19,7 @@ DATA_DIR="${DATA_DIR:-/opt/app-root/src/data}"
 mkdir -p "$DATA_DIR"
 
 # Generate GPG key pair on first start
-if [ ! -f "$DATA_DIR/.gpg-initialized" ]; then
+if [ ! -f "$DATA_DIR/.gpg-initialized" ] || ! gpg --list-keys "$GPG_KEY_ID" >/dev/null 2>&1; then
     echo "Generating GPG key pair for $GPG_KEY_ID..."
 
     # Ensure .gnupg directory exists with correct permissions for user 1001
