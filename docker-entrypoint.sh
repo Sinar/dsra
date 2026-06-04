@@ -22,9 +22,6 @@ mkdir -p "$DATA_DIR"
 if [ ! -f "$DATA_DIR/.gpg-initialized" ]; then
     echo "Generating GPG key pair for $GPG_KEY_ID..."
 
-    # Start haveged to provide sufficient entropy for RSA 4096 key generation
-    haveged -F -w 1024 2>/dev/null || true
-
     # Ensure .gnupg directory exists with correct permissions for user 1001
     mkdir -p /opt/app-root/src/.gnupg
     chmod 700 /opt/app-root/src/.gnupg
