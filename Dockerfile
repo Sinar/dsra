@@ -16,7 +16,7 @@ FROM registry.access.redhat.com/ubi9/php-83:latest
 # ------------------------------------------------------------------------------
 # Metadata
 # ------------------------------------------------------------------------------
-LABEL maintainer="Chris Jenkins <chrisj@redhat.com>" \
+LABEL maintainer="Sam Ng <sam@sinarproject.org>" \
       name="sinarproj-dsra" \
       version="1.0.0" \
       description="Sinar Project DSRA - Digital Sovereignty Readiness Assessment for Malaysian Civil Society" \
