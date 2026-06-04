@@ -55,25 +55,30 @@
     // Start session to store results for PDF generation
     session_start();
 
-    // Store POST data in session for PDF generator
-    $_SESSION['assessment_data'] = $_POST;
+    // Store POST data in session for PDF generator (only on POST)
+    if (!empty($_POST)) {
+        $_SESSION['assessment_data'] = $_POST;
 
-    // Store respondent details in session for email submission
-    if (!empty($_POST['respondent_position'])) {
-        $_SESSION['respondent_data'] = [
-            'position' => $_POST['respondent_position'],
-            'org' => $_POST['respondent_org'],
-            'size' => $_POST['respondent_size'],
-            'state' => $_POST['respondent_state'],
-        ];
+        // Store respondent details in session for email submission
+        if (!empty($_POST['respondent_position'])) {
+            $_SESSION['respondent_data'] = [
+                'position' => $_POST['respondent_position'],
+                'org' => $_POST['respondent_org'],
+                'size' => $_POST['respondent_size'],
+                'state' => $_POST['respondent_state'],
+            ];
+        }
     }
+
+    // Use POST data if available, otherwise fall back to session
+    $postData = !empty($_POST) ? $_POST : ($_SESSION['assessment_data'] ?? []);
 
     // Load questions configuration for domain mapping
     $questions = require_once 'config.php';
 
     // Load profiles and get selected profile
     $profiles = require_once 'profiles.php';
-    $selectedProfile = isset($_POST['profile']) ? $_POST['profile'] : 'balanced';
+    $selectedProfile = isset($postData['profile']) ? $postData['profile'] : 'balanced';
 
     // Validate profile exists
     if (!isset($profiles[$selectedProfile])) {
@@ -87,8 +92,8 @@
         $domainWeights = [];
         foreach ($questions as $domainName => $domainData) {
             $paramName = 'custom_weight_' . str_replace(' ', '_', $domainName);
-            if (isset($_POST[$paramName])) {
-                $weight = floatval($_POST[$paramName]);
+            if (isset($postData[$paramName])) {
+                $weight = floatval($postData[$paramName]);
                 // Validate weight is between 1.0 and 2.0
                 $domainWeights[$domainName] = max(1.0, min(2.0, $weight));
             } else {
@@ -125,7 +130,7 @@
     }
 
     // Calculate scores (both raw and weighted)
-    foreach ($_POST as $key => $value) {
+    foreach ($postData as $key => $value) {
         // Match question IDs (ds1, ts1, os1, etc.)
         if (preg_match('/^(ds|ts|os|as|oss|eo|ms)\d+$/', $key)) {
             // Find which domain this question belongs to
@@ -217,7 +222,86 @@
 
     $timezone = new DateTimeZone('Asia/Kuala_Lumpur');
     $assessmentDate = (new DateTime('now', $timezone))->format('F j, Y \a\t g:i A');
+
+    // Determine UI state based on query parameters
+    $showSuccess = isset($_GET['sent']) && $_GET['sent'] === '1';
+    $errorType = $_GET['error'] ?? '';
+    $showError = !empty($errorType) && $errorType !== 'error_submitted';
+    $showErrorSubmitted = isset($_GET['error_submitted']) && $_GET['error_submitted'] === '1';
+
+    $errorMessages = [
+        'no_data' => 'Assessment session expired. The assessment data could not be found in your session. Please take the assessment again and try submitting.',
+        'no_respondent' => 'Respondent information missing. Your session may have expired. Please take the assessment again and try submitting.',
+        'mailer_not_configured' => 'Email system not configured. The server administrator needs to configure the mailer settings (MAILER_DSN) before emails can be sent.',
+        'send_failed' => 'Email sending failed. The server encountered an error while trying to send the email. Please try again later.',
+    ];
+    $errorMessage = $errorMessages[$errorType] ?? 'An unknown error has occurred. Click one of the buttons below to submit details to the team.';
     ?>
+
+    <?php if ($showSuccess): ?>
+    <!-- Success Message -->
+    <div class="results-header">
+      <div style="text-align: center; padding: 3rem 2rem; background: #1a3a1a; border-radius: 8px; border: 2px solid #2b9c2b; margin-top: 1rem;">
+        <i class="fa-solid fa-check-circle" style="color: #2b9c2b; font-size: 3rem; margin-bottom: 1rem;"></i>
+        <h2 style="color: #2b9c2b; margin-bottom: 1rem;">Submission Successful</h2>
+        <p style="color: #ccc; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
+          Thank you for your submission! The email has been successfully sent to the Sinar Project team.
+        </p>
+      </div>
+    </div>
+
+    <?php elseif ($showErrorSubmitted): ?>
+    <!-- Error Submitted Message -->
+    <div class="results-header">
+      <div style="text-align: center; padding: 3rem 2rem; background: #1a3a1a; border-radius: 8px; border: 2px solid #2b9c2b; margin-top: 1rem;">
+        <i class="fa-solid fa-check-circle" style="color: #2b9c2b; font-size: 3rem; margin-bottom: 1rem;"></i>
+        <h2 style="color: #2b9c2b; margin-bottom: 1rem;">Error Reported</h2>
+        <p style="color: #ccc; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
+          Thank you. The error has been reported to the team.
+        </p>
+      </div>
+    </div>
+
+    <?php elseif ($showError): ?>
+    <!-- Error Message -->
+    <div class="results-header">
+      <div style="text-align: center; padding: 3rem 2rem; background: #3a1a1a; border-radius: 8px; border: 2px solid #c9190b; margin-top: 1rem;">
+        <i class="fa-solid fa-exclamation-triangle" style="color: #c9190b; font-size: 3rem; margin-bottom: 1rem;"></i>
+        <h2 style="color: #c9190b; margin-bottom: 1rem;">Submission Error</h2>
+        <p style="color: #ccc; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
+          <?php echo htmlspecialchars($errorMessage); ?>
+        </p>
+      </div>
+
+      <?php
+      $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+      $githubTitle = 'Bug: ' . $errorType . ' - ' . $errorMessage;
+      $githubBody = "## Error Report\n\n- **URL:** $currentUrl\n- **Error:** $errorType\n- **Message:** $errorMessage\n- **Timestamp (UTC+8):** $assessmentDate\n\n<!-- Please assign to @samqi -->";
+      ?>
+      <div class="form-actions no-print" style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem; margin-top: 2rem;">
+        <form method="POST" action="submit-error.php" style="display: inline;">
+          <input type="hidden" name="error_url" value="<?php echo htmlspecialchars($currentUrl); ?>">
+          <input type="hidden" name="error_message" value="<?php echo htmlspecialchars($errorType . ': ' . $errorMessage); ?>">
+          <input type="hidden" name="error_timestamp" value="<?php echo htmlspecialchars($assessmentDate); ?>">
+          <button type="submit" class="btn-success" style="background: #c9190b; border-color: #c9190b; padding: 0.75rem 2rem; font-size: 1.1rem;">
+            <i class="fa-solid fa-paper-plane"></i> Submit error issue
+          </button>
+        </form>
+
+        <a href="https://github.com/Sinar/dsra/issues/new?title=<?php echo urlencode($githubTitle); ?>&body=<?php echo urlencode($githubBody); ?>&labels[]=bug"
+           target="_blank" rel="noopener noreferrer" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">
+          <i class="fa-brands fa-github"></i> Submit issue via GitHub
+        </a>
+
+        <div style="margin-top: 0.25rem;">
+          <a href="index.php" class="btn-secondary" style="font-size: 0.85rem; padding: 0.4rem 0.75rem;">
+            <i class="fa-solid fa-rotate-left"></i> New Assessment
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <?php else: ?>
 
     <!-- Results Header -->
     <div class="results-header">
@@ -584,9 +668,11 @@
       </div>
     </div>
 
+    <?php endif; ?>
+
     <!-- Footer -->
     <div class="results-footer">
-      <p><small>Generated by Viewfinder Digital Sovereignty Readiness Assessment on <?php echo $assessmentDate; ?></small></p>
+      <p><small>Generated by <a href="https://github.com/Sinar/dsra" target="_blank" rel="noopener noreferrer" style="color: #9ec7fc;">Sinar Project</a> Digital Sovereignty Readiness Assessment on <?php echo $assessmentDate; ?></small></p>
       <br>
       <p><strong>Privacy:</strong> Personal Identifying Information collected in the survey will not be shared publicly.</p>
       <p><strong>Disclaimer:</strong> This survey is for informational purposes only to aid organizations review their general sovereign posture. This is an analytical assessment tool and does not replace compliance certifications, legal and regulatory advice. It should not be utilised for validation of an organization's compliance with any specific digital sovereignty requirements. It is not endorsed by any regulatory authority, and its findings or recommendations are not legally binding nor does it constitute legal advice.</p>
