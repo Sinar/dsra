@@ -11,7 +11,7 @@ on:
       - master
 
 env:
-  IMAGE_NAME: viewfinder-upstream
+  IMAGE_NAME: sinarproj-dsra
 
 jobs:
   build-and-push:

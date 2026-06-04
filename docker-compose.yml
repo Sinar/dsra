@@ -2,8 +2,8 @@ services:
   viewfinder:
     build:
       context: .
-    image: viewfinder-upstream:latest
-    container_name: viewfinder-upstream
+    image: sinarproj-dsra:latest
+    container_name: sinarproj-dsra
     ports:
       - "8080:8080"
     restart: unless-stopped

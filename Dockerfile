@@ -1,8 +1,8 @@
 # ==============================================================================
-# Viewfinder Upstream - Container Image
+# Sinar Project DSRA - Container Image
 # ==============================================================================
-# A streamlined Digital Sovereignty Readiness Assessment tool
-# Based on Red Hat Universal Base Image 9 with PHP 8.3
+# A streamlined Digital Sovereignty Readiness Assessment tool for Malaysian
+# civil society, based on Red Hat Universal Base Image 9 with PHP 8.3.
 #
 # Features:
 # - 21 questions across 7 critical domains
@@ -17,13 +17,13 @@ FROM registry.access.redhat.com/ubi9/php-83:latest
 # Metadata
 # ------------------------------------------------------------------------------
 LABEL maintainer="Chris Jenkins <chrisj@redhat.com>" \
-      name="viewfinder-upstream" \
+      name="sinarproj-dsra" \
       version="1.0.0" \
-      description="Viewfinder Upstream - Digital Sovereignty Readiness Assessment" \
+      description="Sinar Project DSRA - Digital Sovereignty Readiness Assessment for Malaysian Civil Society" \
       summary="Lightweight assessment tool for evaluating digital sovereignty posture across 7 domains" \
       io.k8s.description="Digital Sovereignty Readiness Assessment tool with 7 domain coverage and 4-level maturity model" \
-      io.k8s.display-name="Viewfinder Upstream" \
-      io.openshift.tags="assessment,digital-sovereignty,php,redhat"
+      io.k8s.display-name="Sinar Project DSRA" \
+      io.openshift.tags="assessment,digital-sovereignty,php,sinar"
 
 # ------------------------------------------------------------------------------
 # Environment Setup
@@ -142,6 +142,6 @@ CMD ["/opt/app-root/src/docker-entrypoint.sh"]
 # ==============================================================================
 # Build Instructions:
 # ------------------
-# Build: podman build -t viewfinder-upstream:latest .
-# Run:   podman run -d -p 8080:8080 --name viewfinder-upstream viewfinder-upstream:latest
+# Build: podman build -t sinarproj-dsra:latest .
+# Run:   podman run -d -p 8080:8080 --name sinarproj-dsra sinarproj-dsra:latest
 # ==============================================================================

@@ -6,7 +6,7 @@ A streamlined Digital Sovereignty assessment tool focused on providing organizat
 
 This tool helps organizations evaluate their digital sovereignty posture across 7 critical domains in just 10-15 minutes. **Upon completion, you can download a [PDF report](#pdf-report) for sharing with internal teams or stakeholders.**
 
-The name "viewfinder" reflects the tool's purpose as a lens into your organization's sovereignty posture — giving civil society organisations, IT and business leaders a clear, focused view across 7 critical domains. The repository name `viewfinder-upstream` follows Red Hat's open-source model: "upstream" is the pure, self-hosted codebase (this repo), while "downstream" is the branded version hosted on Red Hat's website.
+The name "viewfinder" reflects the original tool's purpose as a lens into your organization's sovereignty posture. This repository, `sinarproj-dsra`, is maintained by Sinar Project with enhancements for Malaysian civil society context.
 
 > **Note**: The default `main` branch stores no data server-side. The `cso-formsubmission` branch stores assessment results encrypted at rest — see [Data Storage & Security](#data-storage--security-cso-formsubmission-branch) for details.
 
@@ -143,8 +143,6 @@ Professional PDF report with scores, domain breakdown, maturity level assessment
    http://localhost:8080
    ```
 
-   > **Note**: Image and container names currently use `viewfinder-upstream` for upstream compatibility. These will be updated in a future release after internal packages are migrated.
-
    > **For the email submission feature**: Copy `.env.example` to `.env` and configure `MAILER_DSN` before building (see [Deploying the Email Submission Branch](#quick-start) for details).
 
    > **For the encrypted storage feature**: The `data/` directory stores GPG-encrypted assessment results. Ensure it is writable by the container (mounted as a volume). GPG keys are auto-generated on first start — mount a volume for `/opt/app-root/src/.gnupg` to retain them across rebuilds.
@@ -152,25 +150,25 @@ Professional PDF report with scores, domain breakdown, maturity level assessment
 #### Alternative: Docker without Compose
 
 ```bash
-docker build -t viewfinder-upstream:latest .
-docker run -d -p 8080:8080 --name viewfinder-upstream viewfinder-upstream:latest
+docker build -t sinarproj-dsra:latest .
+docker run -d -p 8080:8080 --name sinarproj-dsra sinarproj-dsra:latest
 ```
 
 #### Multi-Architecture Builds
 
 ```bash
 # Example: Building for both amd64 and arm64
-docker buildx build -t viewfinder-upstream:latest . --platform linux/amd64,linux/arm64
+docker buildx build -t sinarproj-dsra:latest . --platform linux/amd64,linux/arm64
 ```
 
 #### Managing the Container
 
 ```bash
 # Stop the container
-docker stop viewfinder-upstream
+docker stop sinarproj-dsra
 
 # Remove the container
-docker rm viewfinder-upstream
+docker rm sinarproj-dsra
 
 # View logs
 docker compose logs -f
@@ -465,8 +463,8 @@ Or change the host port in `docker-compose.yml` (e.g., `"8081:8080"`).
 
 **Issue**: Container name already exists
 ```bash
-docker stop viewfinder-upstream
-docker rm viewfinder-upstream
+docker stop sinarproj-dsra
+docker rm sinarproj-dsra
 docker compose up -d
 ```
 
