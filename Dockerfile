@@ -103,7 +103,8 @@ COPY --chown=1001:0 README.md ./
 # Directory Structure & Permissions
 # ------------------------------------------------------------------------------
 # Create required directories
-RUN mkdir -p ${APP_ROOT}/logs ${APP_ROOT}/data
+RUN mkdir -p ${APP_ROOT}/logs ${APP_ROOT}/data /opt/app-root/src/.gnupg && \
+    echo "allow-loopback-pinentry" > /opt/app-root/src/.gnupg/gpg-agent.conf
 
 # Set ownership and permissions for OpenShift compatibility
 # Files: 644, Directories: 755, Group writable: logs
@@ -111,7 +112,8 @@ RUN chown -R 1001:0 ${APP_ROOT} && \
     chmod -R g=u ${APP_ROOT} && \
     find ${APP_ROOT} -type d -exec chmod 755 {} \; && \
     find ${APP_ROOT} -type f -exec chmod 644 {} \; && \
-    chmod 775 ${APP_ROOT}/logs
+    chmod 775 ${APP_ROOT}/logs && \
+    chmod 700 /opt/app-root/src/.gnupg
 
 # ------------------------------------------------------------------------------
 # Runtime Configuration
