@@ -40,11 +40,14 @@ EOF
 
     # Generate the key
     if gpg --batch --gen-key /tmp/gpg-batch.conf 2>/tmp/gpg-error.log; then
-        # Export the public key for verification
-        gpg --export --armor "${GPG_KEY_ID}" > "${DATA_DIR}/public-key.asc" 2>/dev/null
         touch "${DATA_DIR}/.gpg-initialized"
+        # Export the public key for verification (best-effort — may fail if bind mount permissions)
+        if gpg --export --armor "${GPG_KEY_ID}" > "${DATA_DIR}/public-key.asc" 2>/dev/null; then
+            echo "Public key exported to ${DATA_DIR}/public-key.asc"
+        else
+            echo "Warning: could not export public key to ${DATA_DIR}/public-key.asc (bind mount permissions?)"
+        fi
         echo "GPG key pair generated successfully."
-        echo "Public key exported to ${DATA_DIR}/public-key.asc"
     else
         echo "Warning: GPG key generation failed. See /tmp/gpg-error.log for details."
         echo "Encrypted storage will not be available until a key is generated."
