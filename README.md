@@ -494,12 +494,26 @@ The 14-day validity period has passed. The token is automatically removed from t
 **Issue**: Download link shows "Download limit reached"
 The file has been downloaded 5 times. Contact the Sinar Project team for a new download link.
 
+**Issue**: Container crash-loops with "chmod: Operation not permitted" on `.gnupg`
+The `gpg-keys` named volume was mounted with root ownership, which prevents UID 1001 from writing. Fixed in the Dockerfile by pre-creating the `.gnupg` directory during the build (so Docker volume initialization copies it with correct ownership). If you still hit this:
+```bash
+docker compose down -v
+docker compose up -d --build
+```
+
+**Issue**: Container crash-loops with "public-key.asc: Permission denied"
+The `data/` bind mount on the host needs to be writable by the container's UID 1001:
+```bash
+chmod 777 data/
+docker compose restart
+```
+
 **Issue**: Email sends but no encrypted files found in `data/`
 Check the container logs for GPG errors:
 ```bash
 docker compose logs viewfinder | grep -i gpg
 ```
-Ensure `GPG_KEY_ID` is set correctly in `.env` and `gpg` is installed in the container (verify with `docker compose exec viewfinder gpg --version`).
+Ensure `data/` is writable by UID 1001 (`chmod 777 data/`), `GPG_KEY_ID` is set correctly in `.env`, and `gpg` is installed (verify with `docker compose exec viewfinder gpg --version`).
 
 **Issue**: "GPG key not found" or "encryption failed" in logs
 The GPG key generation may have failed on first start. Run manually:
