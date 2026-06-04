@@ -23,8 +23,7 @@ if [ ! -f "$DATA_DIR/.gpg-initialized" ]; then
     echo "Generating GPG key pair for $GPG_KEY_ID..."
 
     # Ensure .gnupg directory exists with correct permissions for user 1001
-    mkdir -p /opt/app-root/src/.gnupg
-    chmod 700 /opt/app-root/src/.gnupg
+    mkdir -p -m 700 /opt/app-root/src/.gnupg
     echo "allow-loopback-pinentry" > /opt/app-root/src/.gnupg/gpg-agent.conf
 
     # Create batch config for unattended key generation
