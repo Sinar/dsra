@@ -308,6 +308,14 @@
       <h1><i class="fa-solid fa-chart-bar"></i> Digital Sovereignty Readiness Assessment Results</h1>
       <p class="assessment-date"><strong>Assessment Date:</strong> <?php echo $assessmentDate; ?></p>
 
+      <p style="color: #f0ab00; text-align: center; margin-top: 0.75rem; font-size: 1.05rem;">
+        You may review the results below and
+        <a href="#send-form" style="color: #f0ab00; text-decoration: underline; text-decoration-style: dotted;">
+          <strong>SEND</strong>
+        </a>
+        the results to the Sinar Project team.
+      </p>
+
       <!-- Profile Information -->
       <div style="text-align: center; margin-top: 1rem; padding: 1rem; background: #1a1a1a; border-radius: 4px; border: 1px solid #444;">
         <i class="fa-solid <?php echo htmlspecialchars($profileData['icon']); ?>" style="color: #0d60f8; margin-right: 0.5rem; font-size: 1.2rem;"></i>
@@ -651,7 +659,7 @@
 
     <!-- Action Buttons -->
     <div class="form-actions no-print" style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
-      <form method="POST" action="send-email.php" style="display: inline;">
+      <form method="POST" action="send-email.php" style="display: inline;" id="send-form">
         <button type="submit" class="btn-success" style="background: #2b9c2b; border-color: #2b9c2b; padding: 0.75rem 2rem; font-size: 1.1rem;">
           <i class="fa-solid fa-paper-plane"></i> Send to Sinar Project team
         </button>
