@@ -16,3 +16,7 @@ services:
       - DATA_DIR=${DATA_DIR:-/opt/app-root/src/data}
     volumes:
       - ./data:/opt/app-root/src/data
+      - gpg-keys:/opt/app-root/src/.gnupg
+
+volumes:
+  gpg-keys:
