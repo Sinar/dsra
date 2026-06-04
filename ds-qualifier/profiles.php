@@ -8,17 +8,17 @@
 
 return [
     'balanced' => [
-        'name' => 'Balanced',
-        'description' => 'Equal weighting across all domains - suitable for general assessments and organizations without specific regulatory constraints.',
+        'name' => 'Civil Society',
+        'description' => 'Differentiated weighting for civil society organisations — emphasising data sovereignty, operational independence, and open source as critical priorities (2.0x), with technical sovereignty and managed services as important (1.5x).',
         'icon' => 'fa-balance-scale',
         'weights' => [
-            'Data Sovereignty' => 1.0,
-            'Technical Sovereignty' => 1.0,
-            'Operational Sovereignty' => 1.0,
+            'Data Sovereignty' => 2.0,
+            'Technical Sovereignty' => 1.5,
+            'Operational Sovereignty' => 2.0,
             'Assurance Sovereignty' => 1.0,
-            'Open Source' => 1.0,
+            'Open Source' => 2.0,
             'Executive Oversight' => 1.0,
-            'Managed Services' => 1.0
+            'Managed Services' => 1.5
         ]
     ],
 
