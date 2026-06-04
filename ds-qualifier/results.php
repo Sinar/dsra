@@ -309,12 +309,26 @@
       <p class="assessment-date"><strong>Assessment Date:</strong> <?php echo $assessmentDate; ?></p>
 
       <p style="color: #f0ab00; text-align: center; margin-top: 0.75rem; font-size: 1.05rem;">
-        You may review the results below and
+        You may review the results below. If you do not need to review, you can click the
         <a href="#send-form" style="color: #f0ab00; text-decoration: underline; text-decoration-style: dotted;">
-          <strong>SEND</strong>
+          <strong>Send</strong>
         </a>
-        the results to the Sinar Project team.
+        button to send the results to the Sinar Project team.
       </p>
+
+      <div class="form-actions no-print" style="display: flex; justify-content: center; gap: 0.75rem; margin-top: 1rem;">
+        <form method="POST" action="send-email.php" style="display: inline;">
+          <button type="submit" class="btn-success" style="background: #2b9c2b; border-color: #2b9c2b; font-size: 0.85rem; padding: 0.4rem 0.75rem;">
+            <i class="fa-solid fa-paper-plane"></i> Send to Sinar Project team
+          </button>
+        </form>
+        <a href="generate-pdf.php" class="btn-primary" style="font-size: 0.85rem; padding: 0.4rem 0.75rem;">
+          <i class="fa-solid fa-file-pdf"></i> Download PDF
+        </a>
+        <a href="index.php" class="btn-secondary" style="font-size: 0.85rem; padding: 0.4rem 0.75rem;">
+          <i class="fa-solid fa-rotate-left"></i> New Assessment
+        </a>
+      </div>
 
       <!-- Profile Information -->
       <div style="text-align: center; margin-top: 1rem; padding: 1rem; background: #1a1a1a; border-radius: 4px; border: 1px solid #444;">
