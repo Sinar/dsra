@@ -294,10 +294,149 @@ try {
     $mailerTo = $_SERVER['MAILER_TO'] ?? getenv('MAILER_TO') ?: 'team@sinarproject.org';
 
     $orgName = htmlspecialchars($respondentData['org']);
+
+    // Generate encrypted file storage for this submission
+    // This must happen before email creation so download links are included
+    $gpgKeyId = $_SERVER['GPG_KEY_ID'] ?? getenv('GPG_KEY_ID') ?: 'team@sinarproject.org';
+    $dataDir = $_SERVER['DATA_DIR'] ?? getenv('DATA_DIR') ?: __DIR__ . '/../data';
+    $baseUrl = $_SERVER['BASE_URL'] ?? getenv('BASE_URL') ?: '';
+
+    if (!empty($baseUrl) && !empty($gpgKeyId) && is_dir($dataDir) && is_writable($dataDir)) {
+        // Generate unique token (UUID v4)
+        $token = sprintf(
+            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0x0fff) | 0x4000,
+            mt_rand(0, 0x3fff) | 0x8000,
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+        );
+
+        // Build JSON data
+        $domainsData = [];
+        foreach ($questions as $domainName => $domainData) {
+            $score = $domainScores[$domainName] ?? 0;
+            $maxDomainScore = count($domainData['questions']);
+            $percentage = $maxDomainScore > 0 ? round(($score / $maxDomainScore) * 100) : 0;
+            $weight = $domainWeights[$domainName] ?? 1.0;
+            $domainsData[$domainName] = [
+                'score' => $score,
+                'max' => $maxDomainScore,
+                'weight' => $weight,
+                'percentage' => $percentage,
+                'responses' => $domainResponses[$domainName] ?? [],
+            ];
+        }
+
+        $jsonData = [
+            'submission_id' => $token,
+            'submitted_at' => $assessmentDate,
+            'respondent' => [
+                'position' => $respondentData['position'] ?? '',
+                'org' => $respondentData['org'] ?? '',
+                'size' => $respondentData['size'] ?? '',
+                'state' => $respondentData['state'] ?? '',
+            ],
+            'profile' => $profileData['name'] ?? $selectedProfile,
+            'maturity_level' => $maturityLevel,
+            'weighted_score' => round($weightedScore, 1),
+            'raw_score' => $totalScore,
+            'max_score' => $maxScore,
+            'score_percentage' => $scorePercentage,
+            'domains' => $domainsData,
+            'unknown_questions' => $unknownQuestions,
+        ];
+
+        $jsonContent = json_encode($jsonData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+        // Build CSV data
+        $csvLines = [];
+        $csvLines[] = 'Domain,Score,Max,Weight,Percentage,Maturity Level';
+        foreach ($questions as $domainName => $domainData) {
+            $score = $domainScores[$domainName] ?? 0;
+            $maxDomainScore = count($domainData['questions']);
+            $percentage = $maxDomainScore > 0 ? round(($score / $maxDomainScore) * 100) : 0;
+            $weight = $domainWeights[$domainName] ?? 1.0;
+
+            if ($percentage <= 20) { $levelText = 'Initial'; }
+            elseif ($percentage <= 40) { $levelText = 'Managed'; }
+            elseif ($percentage <= 60) { $levelText = 'Defined'; }
+            elseif ($percentage <= 80) { $levelText = 'Quantitatively Managed'; }
+            else { $levelText = 'Optimizing'; }
+
+            $csvLines[] = '"' . str_replace('"', '""', $domainName) . '",' . $score . ',' . $maxDomainScore . ',' . number_format($weight, 1) . ',' . $percentage . ',' . $levelText;
+        }
+        $csvContent = implode("\n", $csvLines) . "\n";
+
+        // GPG encrypt function
+        $gpgEncrypt = function ($data, $outputPath, $keyId) {
+            $command = sprintf(
+                'gpg --encrypt --recipient %s --output %s --trust-model always 2>/dev/null',
+                escapeshellarg($keyId),
+                escapeshellarg($outputPath)
+            );
+            $process = proc_open(
+                $command,
+                [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
+                $pipes
+            );
+            if (!is_resource($process)) {
+                return false;
+            }
+            fwrite($pipes[0], $data);
+            fclose($pipes[0]);
+            $exitCode = proc_close($process);
+            return $exitCode === 0;
+        };
+
+        $jsonFile = $token . '.json.gpg';
+        $csvFile = $token . '.csv.gpg';
+        $jsonPath = $dataDir . '/' . $jsonFile;
+        $csvPath = $dataDir . '/' . $csvFile;
+
+        $jsonEncrypted = $gpgEncrypt($jsonContent, $jsonPath, $gpgKeyId);
+        $csvEncrypted = $gpgEncrypt($csvContent, $csvPath, $gpgKeyId);
+
+        if ($jsonEncrypted && $csvEncrypted) {
+            // Save token metadata
+            $tokensFile = $dataDir . '/tokens.json';
+            $tokens = [];
+            if (file_exists($tokensFile)) {
+                $tokens = json_decode(file_get_contents($tokensFile), true) ?? [];
+            }
+
+            $now = new DateTime('now', new DateTimeZone('Asia/Kuala_Lumpur'));
+            $expires = (new DateTime('now', new DateTimeZone('Asia/Kuala_Lumpur')))->modify('+14 days');
+
+            $tokens[$token] = [
+                'file_json' => $jsonFile,
+                'file_csv' => $csvFile,
+                'org' => $respondentData['org'] ?? '',
+                'created_at' => $now->format('Y-m-d\TH:i:sP'),
+                'expires_at' => $expires->format('Y-m-d\TH:i:sP'),
+                'downloads_remaining' => 5,
+            ];
+
+            file_put_contents($tokensFile, json_encode($tokens, JSON_PRETTY_PRINT));
+
+            // Append download links to email body
+            $downloadUrl = rtrim($baseUrl, '/') . '/ds-qualifier/download-result.php?token=' . urlencode($token);
+            $expiresDisplay = $expires->format('F j, Y');
+
+            $emailText .= "\n\n---\n";
+            $emailText .= "Assessment results saved on server (encrypted at rest with GPG):\n";
+            $emailText .= "- Full data (JSON): {$downloadUrl}\n";
+            $emailText .= "- Summary (CSV):  {$downloadUrl}\n\n";
+            $emailText .= "This link expires on {$expiresDisplay} and can be used up to 5 times.\n";
+            $emailText .= "Download the file before it expires. Contact the Sinar Project team if you need a new link.\n";
+        }
+    }
+
+    // Build email (after download links are appended to $emailText)
     $email = (new Email())
         ->from($mailerFrom)
         ->to($mailerTo)
-        ->subject("DSRA Assessment Results - {$orgName}")
+        ->subject("[POC/Trial] DSRA Assessment Results - {$orgName}")
         ->text($emailText)
         ->attach($pdfContent, 'DS-Readiness-Assessment.pdf', 'application/pdf');
 

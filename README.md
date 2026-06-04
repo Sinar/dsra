@@ -6,7 +6,9 @@ A streamlined Digital Sovereignty assessment tool focused on providing organizat
 
 This tool helps organizations evaluate their digital sovereignty posture across 7 critical domains in just 10-15 minutes. **Upon completion, you can download a [PDF report](#pdf-report) for sharing with internal teams or stakeholders.**
 
-The name "viewfinder" reflects the tool's purpose as a lens into your organization's sovereignty posture — giving civil society organisations, IT and business leaders a clear, focused view across 7 critical domains. The repository name `viewfinder-upstream` follows Red Hat's open-source model: "upstream" is the pure, self-hosted codebase (this repo), while "downstream" is the branded version hosted on Red Hat's website. Running the upstream version means all assessment data stays in your browser — nothing is sent to Red Hat or third parties.
+The name "viewfinder" reflects the tool's purpose as a lens into your organization's sovereignty posture — giving civil society organisations, IT and business leaders a clear, focused view across 7 critical domains. The repository name `viewfinder-upstream` follows Red Hat's open-source model: "upstream" is the pure, self-hosted codebase (this repo), while "downstream" is the branded version hosted on Red Hat's website.
+
+> **Note**: The default `main` branch stores no data server-side. The `cso-formsubmission` branch stores assessment results encrypted at rest — see [Data Storage & Security](#data-storage--security-cso-formsubmission-branch) for details.
 
 For more background:
 - [Digital Sovereignty Is Illusory Without Open Source and a Trusted Supply Chain](https://www.redhat.com/en/blog/digital-sovereignty-illusory-without-open-source-and-trusted-supply-chain)
@@ -32,11 +34,35 @@ Then open http://localhost:8080
 git clone -b cso-formsubmission https://github.com/Sinar/dsra.git
 cd dsra
 cp .env.example .env
-# Edit .env with your Mailgun API key (or SMTP credentials)
-# and set MAILER_TO / MAILER_FROM addresses:
-# nano .env
+```
+
+Edit `.env` with your configuration:
+
+| Variable | Description | Required |
+|---|---|---|
+| `MAILER_DSN` | Mailgun API key or SMTP credentials | Yes |
+| `MAILER_TO` | Recipient email for assessment results | Yes |
+| `MAILER_FROM` | Sender email address | Yes |
+| `BASE_URL` | Public URL of this instance (e.g. `https://dsra.example.com`) | Yes (for download links) |
+| `GPG_KEY_ID` | GPG key identifier (default: `team@sinarproject.org`) | No |
+
+```bash
+# Create data directory for encrypted storage
+mkdir -p data
+
+# Build and start
 docker compose up -d --build
 ```
+
+> **First start**: The container automatically generates a GPG key pair on initial startup. The public key is exported to `data/public-key.asc` for verification. No manual steps needed.
+
+> **Persistence**: To preserve GPG keys and stored files across container rebuilds, add this volume to your `docker-compose.yml`:
+> ```yaml
+> volumes:
+>   - ./data:/opt/app-root/src/data
+>   - gpg-keys:/opt/app-root/src/.gnupg
+> ```
+> Without the GPG volume, removing the container loses the private key and existing encrypted files cannot be decrypted.
 
 To update an existing deployment with the latest changes:
 ```bash
@@ -96,7 +122,8 @@ Professional PDF report with scores, domain breakdown, maturity level assessment
 - **PDF Export**: Professional downloadable reports
 - **Progress Auto-Save**: Browser-based session persistence
 - **Keyboard Navigation**: Arrow keys for quick navigation, Ctrl+S to save
-- **Privacy-First**: No data collected or stored server-side; all progress persisted in browser localStorage
+- **Privacy-First** (default branch): No data collected or stored server-side; all progress persisted in browser localStorage
+- **Secure Storage** (cso-formsubmission branch): Assessment results encrypted with GPG at rest in the `data/` directory
 
 ## Docker Installation (Recommended)
 
@@ -119,6 +146,8 @@ Professional PDF report with scores, domain breakdown, maturity level assessment
    > **Note**: Image and container names currently use `viewfinder-upstream` for upstream compatibility. These will be updated in a future release after internal packages are migrated.
 
    > **For the email submission feature**: Copy `.env.example` to `.env` and configure `MAILER_DSN` before building (see [Deploying the Email Submission Branch](#quick-start) for details).
+
+   > **For the encrypted storage feature**: The `data/` directory stores GPG-encrypted assessment results. Ensure it is writable by the container (mounted as a volume). GPG keys are auto-generated on first start — mount a volume for `/opt/app-root/src/.gnupg` to retain them across rebuilds.
 
 #### Alternative: Docker without Compose
 
@@ -402,6 +431,30 @@ Edit `ds-qualifier/profiles.php` to customize:
 | Line of Business Content | ✓ | ✗ |
 | Approximate Size | ~100+ MB | ~60-65 MB |
 
+## Data Storage & Security (cso-formsubmission branch)
+
+### What is stored
+Assessment results (respondent details, scores, domain breakdown, maturity level) are saved as JSON and CSV files in the `data/` directory after successful email submission.
+
+### Encryption at rest
+All files are encrypted with GPG (RSA 4096-bit) using a key pair generated automatically on the first container start. The private key never leaves the server and is **never committed** to version control or the Docker image.
+
+### Access tokens
+Each submission generates a unique token embedded in the email. The token:
+- Expires **14 days** after creation
+- Allows a maximum of **5 downloads**
+- Decrypts the file server-side — recipients receive plaintext JSON/CSV
+
+### GPG key management
+- Keys are generated in the container's `/opt/app-root/src/.gnupg` on first start
+- The public key is exported to `data/public-key.asc` for verification
+- **Do not commit** the `data/` directory or GPG key material to version control
+- Mount a volume for `/opt/app-root/src/.gnupg` to preserve keys across container rebuilds
+- Without the GPG volume, removing the container loses the private key and previously saved files become undecryptable
+
+### Privacy
+This branch **collects and stores** respondent PII (position, organisation, size, state). Ensure your data handling complies with applicable privacy regulations and obtain necessary consent from respondents.
+
 ## Troubleshooting
 
 **Issue**: Port 8080 already in use
@@ -433,6 +486,29 @@ docker compose up -d --build
 ```bash
 docker compose logs -f
 docker compose logs viewfinder
+```
+
+**Issue**: Download link shows "Link expired"
+The 14-day validity period has passed. The token is automatically removed from the system. Contact the Sinar Project team to request a new download link.
+
+**Issue**: Download link shows "Download limit reached"
+The file has been downloaded 5 times. Contact the Sinar Project team for a new download link.
+
+**Issue**: Email sends but no encrypted files found in `data/`
+Check the container logs for GPG errors:
+```bash
+docker compose logs viewfinder | grep -i gpg
+```
+Ensure `GPG_KEY_ID` is set correctly in `.env` and `gpg` is installed in the container (verify with `docker compose exec viewfinder gpg --version`).
+
+**Issue**: "GPG key not found" or "encryption failed" in logs
+The GPG key generation may have failed on first start. Run manually:
+```bash
+docker compose exec viewfinder /opt/app-root/src/docker-entrypoint.sh
+```
+Or check the key exists:
+```bash
+docker compose exec viewfinder gpg --list-keys
 ```
 
 ## Development

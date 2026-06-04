@@ -46,6 +46,7 @@ RUN dnf install -y \
         php-json \
         php-gd \
         php-mbstring \
+        gnupg2 \
     && dnf clean all \
     && rm -rf /var/cache/dnf
 
@@ -94,13 +95,15 @@ COPY --chown=1001:0 error-pages/ ./error-pages/
 COPY --chown=1001:0 css/ ./css/
 #COPY --chown=1001:0 js/ ./js/
 COPY --chown=1001:0 images/ ./images/
+COPY --chown=1001:0 data/ ./data/
+COPY --chown=1001:0 docker-entrypoint.sh ./
 COPY --chown=1001:0 README.md ./
 
 # ------------------------------------------------------------------------------
 # Directory Structure & Permissions
 # ------------------------------------------------------------------------------
 # Create required directories
-RUN mkdir -p ${APP_ROOT}/logs
+RUN mkdir -p ${APP_ROOT}/logs ${APP_ROOT}/data
 
 # Set ownership and permissions for OpenShift compatibility
 # Files: 644, Directories: 755, Group writable: logs
@@ -129,9 +132,10 @@ EXPOSE 8080
 # ------------------------------------------------------------------------------
 # Container Startup
 # ------------------------------------------------------------------------------
-# Use PHP built-in development server
-# Note: For production, consider using Apache/Nginx + PHP-FPM
-CMD ["php", "-S", "0.0.0.0:8080", "-t", "/opt/app-root/src"]
+# Use entrypoint script which generates GPG keys and starts PHP
+# See docker-entrypoint.sh for details
+RUN chmod +x /opt/app-root/src/docker-entrypoint.sh
+CMD ["/opt/app-root/src/docker-entrypoint.sh"]
 
 # ==============================================================================
 # Build Instructions:

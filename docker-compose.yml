@@ -11,3 +11,8 @@ services:
       - MAILER_DSN=${MAILER_DSN}
       - MAILER_TO=${MAILER_TO}
       - MAILER_FROM=${MAILER_FROM}
+      - BASE_URL=${BASE_URL}
+      - GPG_KEY_ID=${GPG_KEY_ID}
+      - DATA_DIR=${DATA_DIR:-/opt/app-root/src/data}
+    volumes:
+      - ./data:/opt/app-root/src/data
