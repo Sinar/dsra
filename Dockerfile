@@ -47,6 +47,7 @@ RUN dnf install -y \
         php-gd \
         php-mbstring \
         gnupg2 \
+        haveged \
     && dnf clean all \
     && rm -rf /var/cache/dnf
 
