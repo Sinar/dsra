@@ -497,28 +497,6 @@
           <div class="landing-card-content">
             <!-- Left Column: Profile Selector -->
             <div class="landing-card-left">
-              <div class="profile-selector">
-                <label for="profile-select">
-                  <i class="fa-solid fa-layer-group"></i> Select Your Industry/Context:
-                </label>
-                <select id="profile-select" name="profile">
-                  <?php foreach ($profiles as $profileKey => $profileData): ?>
-                    <option value="<?php echo htmlspecialchars($profileKey); ?>"
-                            data-description="<?php echo htmlspecialchars($profileData['description']); ?>"
-                            data-icon="<?php echo htmlspecialchars($profileData['icon']); ?>"
-                            <?php echo $profileKey === 'balanced' ? 'selected' : ''; ?>>
-                      <?php echo htmlspecialchars($profileData['name']); ?>
-                    </option>
-                  <?php endforeach; ?>
-                </select>
-                <div class="profile-description" id="profile-description">
-                  <i class="fa-solid fa-balance-scale"></i>
-                  <span id="profile-description-text">
-                    <?php echo htmlspecialchars($profiles['balanced']['description']); ?>
-                  </span>
-                </div>
-              </div>
-
               <p style="font-size: 0.8rem; color: #999; line-height: 1.5; margin-bottom: 1rem; padding: 0.75rem; background: #1a1a1a; border-left: 3px solid #0d60f8; border-radius: 4px;">
                 Sinar Project is hosting a modified version of Red Hat's Digital Sovereignty Readiness Assessment Tool
                 (<a href="https://github.com/Sinar/dsra" target="_blank" rel="noopener" style="color: #0d60f8;">source repo</a>)
@@ -555,6 +533,9 @@
                       <option value="6-10">6–10</option>
                       <option value="more10">More than 10</option>
                     </select>
+                    <div style="color: #999; font-size: 0.7rem; margin-top: 0.25rem; font-style: italic;">
+                      Note: only permanent staff, exclude part time/adhoc contractors and interns.
+                    </div>
                   </div>
                   <div>
                     <label for="respondent-state" style="color: #ccc; font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">State *</label>
@@ -623,8 +604,29 @@
               </div>
             </div>
 
-            <!-- Middle Column: Domain Weights Display -->
+            <!-- Middle Column: Profile & Domain Weights Display -->
             <div class="landing-card-right">
+              <div class="profile-selector" style="margin-bottom: 1rem;">
+                <label for="profile-select">
+                  <i class="fa-solid fa-layer-group"></i> Select Your Industry/Context:
+                </label>
+                <select id="profile-select" name="profile" style="width: 100%; padding: 0.5rem; font-size: 0.85rem; background: #151515; border: 1px solid #444; border-radius: 4px; color: #ccc;">
+                  <?php foreach ($profiles as $profileKey => $profileData): ?>
+                    <option value="<?php echo htmlspecialchars($profileKey); ?>"
+                            data-description="<?php echo htmlspecialchars($profileData['description']); ?>"
+                            data-icon="<?php echo htmlspecialchars($profileData['icon']); ?>"
+                            <?php echo $profileKey === 'balanced' ? 'selected' : ''; ?>>
+                      <?php echo htmlspecialchars($profileData['name']); ?>
+                    </option>
+                  <?php endforeach; ?>
+                </select>
+                <div class="profile-description" id="profile-description">
+                  <i class="fa-solid fa-balance-scale"></i>
+                  <span id="profile-description-text">
+                    <?php echo htmlspecialchars($profiles['balanced']['description']); ?>
+                  </span>
+                </div>
+              </div>
               <div class="weights-display">
                 <h3>
                   <i class="fa-solid fa-chart-bar"></i> Domain Weighting - <span id="profile-name-display">Balanced</span>
