@@ -463,7 +463,7 @@ try {
     $email = (new Email())
         ->from($mailerFrom)
         ->to($mailerTo)
-        ->subject("[POC/Trial] DSRA Assessment Results - {$orgName}")
+        ->subject("DSRA Assessment Results - {$orgName}")
         ->text($emailText)
         ->attach($pdfContent, 'DS-Readiness-Assessment.pdf', 'application/pdf');
 
