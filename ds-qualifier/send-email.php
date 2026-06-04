@@ -366,6 +366,17 @@ try {
 
         // Build CSV data
         $csvLines = [];
+        $csvLines[] = 'Submission ID,' . $token;
+        $csvLines[] = 'Submitted At,' . $assessmentDate;
+        $csvLines[] = 'Position,' . ($respondentData['position_label'] ?? $respondentData['position'] ?? '');
+        $csvLines[] = 'Organisation,' . ($respondentData['org'] ?? '');
+        $csvLines[] = 'Size,' . ($respondentData['size'] ?? '');
+        $csvLines[] = 'State,' . ($respondentData['state'] ?? '');
+        $csvLines[] = 'Profile,' . ($profileData['name'] ?? $selectedProfile);
+        $csvLines[] = 'Maturity Level,' . $maturityLevel;
+        $csvLines[] = 'Weighted Score,' . round($weightedScore, 1) . '/' . $maxScore;
+        $csvLines[] = 'Score Percentage,' . $scorePercentage . '%';
+        $csvLines[] = '';
         $csvLines[] = 'Domain,Score,Max,Weight,Percentage,Maturity Level';
         foreach ($questions as $domainName => $domainData) {
             $score = $domainScores[$domainName] ?? 0;
