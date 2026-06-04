@@ -32,6 +32,16 @@ if (empty($respondentData)) {
     exit;
 }
 
+// Map raw position values to human-readable labels
+$positionLabels = [
+    'head' => 'Head of Organisation',
+    'manager' => 'Project/Programme Manager',
+    'staff' => 'Project Staff',
+    'admin' => 'Administrative',
+    'others' => 'Others',
+];
+$respondentData['position_label'] = $positionLabels[$respondentData['position']] ?? $respondentData['position'];
+
 // Load questions configuration
 $questions = require_once __DIR__ . '/config.php';
 
@@ -150,7 +160,7 @@ $emailText = "Digital Sovereignty Readiness Assessment Results\n";
 $emailText .= "==============================================\n\n";
 $emailText .= "Assessment Date: {$assessmentDate}\n\n";
 $emailText .= "--- Respondent Details ---\n";
-$emailText .= "Position: {$respondentData['position']}\n";
+$emailText .= "Position: {$respondentData['position_label']}\n";
 $emailText .= "Organisation: {$respondentData['org']}\n";
 $emailText .= "Size: {$respondentData['size']}\n";
 $emailText .= "State: {$respondentData['state']}\n\n";
@@ -207,7 +217,7 @@ $html = '<!DOCTYPE html>
 
     <div class="respondent-section">
         <h3 style="color: ' . $maturityColor . ';">Respondent Information</h3>
-        <p><strong>Position:</strong> ' . htmlspecialchars($respondentData['position']) . '</p>
+        <p><strong>Position:</strong> ' . htmlspecialchars($respondentData['position_label']) . '</p>
         <p><strong>Organisation:</strong> ' . htmlspecialchars($respondentData['org']) . '</p>
         <p><strong>Size:</strong> ' . htmlspecialchars($respondentData['size']) . '</p>
         <p><strong>State:</strong> ' . htmlspecialchars($respondentData['state']) . '</p>
@@ -301,6 +311,10 @@ try {
     $dataDir = $_SERVER['DATA_DIR'] ?? getenv('DATA_DIR') ?: __DIR__ . '/../data';
     $baseUrl = $_SERVER['BASE_URL'] ?? getenv('BASE_URL') ?: '';
 
+    if (empty($baseUrl)) {
+        error_log('send-email.php: BASE_URL not set — download links will not be included in email');
+    }
+
     if (!empty($baseUrl) && !empty($gpgKeyId) && is_dir($dataDir) && is_writable($dataDir)) {
         // Generate unique token (UUID v4)
         $token = sprintf(
@@ -333,6 +347,7 @@ try {
             'submitted_at' => $assessmentDate,
             'respondent' => [
                 'position' => $respondentData['position'] ?? '',
+                'position_label' => $respondentData['position_label'] ?? $respondentData['position'] ?? '',
                 'org' => $respondentData['org'] ?? '',
                 'size' => $respondentData['size'] ?? '',
                 'state' => $respondentData['state'] ?? '',
@@ -398,7 +413,6 @@ try {
         $csvEncrypted = $gpgEncrypt($csvContent, $csvPath, $gpgKeyId);
 
         if ($jsonEncrypted && $csvEncrypted) {
-            // Save token metadata
             $tokensFile = $dataDir . '/tokens.json';
             $tokens = [];
             if (file_exists($tokensFile)) {
@@ -429,6 +443,8 @@ try {
             $emailText .= "- Summary (CSV):  {$downloadUrl}\n\n";
             $emailText .= "This link expires on {$expiresDisplay} and can be used up to 5 times.\n";
             $emailText .= "Download the file before it expires. Contact the Sinar Project team if you need a new link.\n";
+        } else {
+            error_log('send-email.php: GPG encryption failed — encrypted files and download links will not be created');
         }
     }
 

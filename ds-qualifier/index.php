@@ -82,6 +82,12 @@
     $respondentOrg = $_GET['org'] ?? '';
     $respondentSize = $_GET['size'] ?? '';
     $respondentState = $_GET['state'] ?? '';
+
+    // Clear stale session respondent data when starting a new assessment
+    // so old values don't leak into fresh submissions
+    session_start();
+    unset($_SESSION['respondent_data']);
+    session_write_close();
     ?>
 
     <div class="qualifier-header">
